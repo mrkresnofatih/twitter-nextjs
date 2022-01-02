@@ -1,0 +1,80 @@
+.followCardOuter {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.followCardInner {
+    display: flex;
+    padding: 8px 16px;
+    align-items: center;
+}
+
+.followCardAvatar {
+    height: 40px;
+    width: 40px;
+    border-radius: 25px;
+}
+
+.followCardUserName {
+    font-size: 14px;
+    font-weight: 400;
+    padding: 0 0 2px 0;
+}
+
+.followCardContent {
+    margin-left: 16px;
+    /*flex: 1;*/
+}
+
+.followCardFullName {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.followButton {
+    padding: 4px 8px 4px 10px;
+    color: white;
+    background-color: #AE00FB;
+    border-bottom-left-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+
+
+.followCardInner:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.followCardInner:hover .followButton {
+    display: block;
+}
+
+.followButton:hover {
+    cursor: pointer;
+}
+
+.followButtonHoverHide {
+    display: block;
+}
+
+.followButtonHoverShow {
+    display: none;
+}
+
+.followButton:hover {
+    display: none;
+}
+
+.followButton:hover {
+    display: block;
+}

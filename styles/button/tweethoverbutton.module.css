@@ -1,0 +1,20 @@
+.tweetHoverButton {
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #AE00FB;
+}
+
+.tweetHoverIcon {
+    height: 30px;
+    width: 30px;
+    opacity: 0.8;
+}
+
+.tweetHoverButton:hover .tweetHoverIcon {
+    opacity: 1;
+    cursor: pointer;
+}

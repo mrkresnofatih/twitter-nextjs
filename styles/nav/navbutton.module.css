@@ -5,16 +5,31 @@
 }
 
 .navButton:hover {
-    background-color: yellow;
+    background-color: #AE00FB;
+    cursor: pointer;
 }
 
 .navButtonIcon {
-    height: 40px;
-    width: 40px;
+    height: 25px;
+    width: 25px;
     margin-right: 24px;
 }
 
+.navButtonIconSelected {
+    background-color: #AE00FB;
+}
+
 .navButtonText {
-    font-weight: 500;
-    font-size: 24px;
+    font-weight: 400;
+    font-size: 18px;
+}
+
+.navButtonTextHover {
+    display: block;
+}
+
+@media screen and (max-width: 1125px) {
+    .navButtonTextHover {
+        display: none;
+    }
 }

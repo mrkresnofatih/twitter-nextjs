@@ -1,0 +1,165 @@
+.tweetCardContainer {
+    /*background-color: yellow;*/
+}
+
+.tweetCard {
+    display: flex;
+    width: calc(100% - 32px);
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.tweetCard:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tweetCardAvatar {
+    height: 50px;
+    width: 50px;
+    border-radius: 100px;
+    margin-right: 18px;
+    z-index: 1;
+}
+
+.tweetCardContent {
+    display: flex;
+    flex: 1;
+    /*width: 100%;*/
+    flex-direction: column;
+    /*background-color: aquamarine;*/
+}
+
+.tweetUsername {
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.tweetCardContentHeader {
+    display: flex;
+    width: 100%;
+    /*background-color: aquamarine;*/
+}
+
+.tweetCardTimestamp {
+    font-size: 16px;
+    font-weight: 200;
+    margin: 0 0 0 8px;
+    color: grey;
+}
+
+.tweetCardMessage {
+    font-size: 14px;
+    font-weight: 200;
+    margin-top: 2px;
+}
+
+.tweetCardReplyAddress {
+    font-size: 14px;
+    font-weight: 200;
+    margin-top: 2px;
+    color: #d378ff;
+}
+
+.tweetImage {
+    width: 100%;
+    margin-top: 8px;
+    border-radius: 8px;
+}
+
+.tweetReactionContainer {
+    margin: 16px 0 0 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.tweetReactionIcon {
+    height: 20px;
+    width: 20px;
+}
+
+.tweetReactionHover {
+    display: none;
+    height: 20px;
+    width: 20px;
+}
+
+.tweetReactionButton {
+    display: block;
+}
+
+.tweetReactionButton:hover .tweetReactionIcon {
+    display: none;
+}
+
+.tweetReactionButton:hover .tweetReactionHover {
+    display: block;
+    cursor: pointer;
+}
+
+.tweetHistoryLineUp {
+    top: 16px;
+    left: 0;
+    width: 40px;
+    border-right: 5px solid #AE00FB;
+    position: absolute;
+    z-index: 0;
+    height: calc(100% - 16px);
+}
+
+.tweetHistoryLineDown {
+    top: 0;
+    left: 0;
+    width: 40px;
+    border-right: 5px solid #AE00FB;
+    position: absolute;
+    z-index: 0;
+    height: 16px;
+}
+
+.tweetHighlight {
+    padding: 4px 16px 4px 12px;
+    background-color: #AE00FB;
+    font-size: 12px;
+    font-weight: 400;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    border-bottom-left-radius: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.replyHighlight {
+    top: 100%;
+    right: 16px;
+    border-radius: 0px 0 8px 8px;
+}
+
+.retweetedByIcon {
+    height: 16px;
+    width: 16px;
+    margin-right: 4px;
+}
+
+.tagCard {
+    margin: 0 4px 8px 0;
+    padding: 4px 8px;
+    border-radius: 100px;
+    border: 2px solid #AE00FB;
+    font-size: 12px;
+    font-weight: 200;
+    display: inline-block;
+}
+
+.tagCard:hover {
+    background-color: #AE00FB;
+    color: white;
+    cursor: pointer;
+}
+
+.tagCollection {
+    padding: 16px 0 0 0;
+}

@@ -5,10 +5,10 @@ import {Icon} from "../icon/Icon";
 import {IconFileNames} from "../../utils/iconUtils";
 
 type Props = {};
-export const HomeHeader = (props: Props) => {
+export const ExploreHeader = (props: Props) => {
     return (
         <BaseHeader
-            title={<h2>Home</h2>}
+            title={<h2>Explore</h2>}
             options={
                 <Icon
                     style={{height: 25, width: 25}}
