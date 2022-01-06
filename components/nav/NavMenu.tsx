@@ -5,6 +5,7 @@ import {NavButton} from "./NavButton";
 import {IconFileNames} from "../../utils/iconUtils";
 import {pageHeaders} from "../../constants/pageHeaders";
 import {Link} from "@mui/material";
+import {pageRoutes} from "../../constants/pageRoutes";
 
 type Props = {
     responsive: boolean,
@@ -16,27 +17,27 @@ export const NavMenu = (props: Props) => {
         {
             iconFileName: IconFileNames.TWITTER_FILLED_WHITE,
             text: "",
-            pageUrl:    "/"
+            pageUrl:    pageRoutes.HOME
         },
         {
             iconFileName: IconFileNames.HOME_OUTLINE_WHITE,
             text: pageHeaders.HOME,
-            pageUrl:    "/"
+            pageUrl:    pageRoutes.HOME
         },
         {
             iconFileName: IconFileNames.EXPLORE_OUTLINE_WHITE,
             text: pageHeaders.EXPLORE,
-            pageUrl:    `/${pageHeaders.EXPLORE.toLowerCase()}`
+            pageUrl:    pageRoutes.EXPLORE
         },
         {
             iconFileName: IconFileNames.BOOKMARK_OUTLINE_WHITE,
             text: pageHeaders.BOOKMARK,
-            pageUrl:    `/${pageHeaders.BOOKMARK.toLowerCase()}`
+            pageUrl:    pageRoutes.BOOKMARK
         },
         {
             iconFileName: IconFileNames.PROFILE_OUTLINE_WHITE,
             text: pageHeaders.PROFILE,
-            pageUrl:    `/${pageHeaders.PROFILE.toLowerCase()}`
+            pageUrl:    pageRoutes.PROFILE
         }
     ]
 

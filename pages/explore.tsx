@@ -8,8 +8,24 @@ import {pageHeaders} from "../constants/pageHeaders";
 import {FeedUpdateNotification} from "../components/layout/FeedUpdateNotification";
 import {TweetCard} from "../components/card/TweetCard";
 import {FollowList} from "../components/list/FollowList";
+import {StoreWrapper} from "../tedux/StoreWrapper";
+import {useSelector} from "react-redux";
+import {authSelector} from "../tedux/auth/selectors";
 
 const Explore: NextPage = () => {
+    return (
+        <StoreWrapper>
+            <ExploreComp/>
+        </StoreWrapper>
+    );
+};
+
+export default Explore
+
+const ExploreComp = () => {
+    const {token} = useSelector(authSelector);
+    const isAuthed: boolean = (token === "loginToken");
+
     return (
         <BaseLayout
             left={
@@ -28,8 +44,8 @@ const Explore: NextPage = () => {
             }
             right={<FollowList/>}
             header={<ExploreHeader/>}
-            isLoading={false}/>
-    );
-};
-
-export default Explore
+            isLoading={false}
+            isAuthenticated={isAuthed}
+        />
+    )
+}

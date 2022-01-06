@@ -1,0 +1,92 @@
+.loginSignUpScreenContainer {
+    flex: 1;
+    display: flex;
+}
+
+.loginSignupForm {
+    display: flex;
+    min-width: 400px;
+    padding: 32px;
+    flex-direction: column;
+    background: white;
+}
+
+.loginSignUpTitle {
+    font-weight: 600;
+    font-size: 36px;
+    margin: 0;
+    color: rgb(50, 50, 50);
+}
+
+.loginFormSpace {
+    height: 24px;
+}
+
+.loginFormSwitchText {
+    font-weight: 300;
+    font-size: 14px;
+    margin: 0;
+    color: rgb(50, 50, 50);
+    text-decoration: underline;
+}
+
+.loginFormSwitchText:hover {
+    cursor: pointer;
+}
+
+.loginSignupButtonContent {
+    display: flex;
+    align-items: center;
+}
+
+.loginSignupButtonIcon {
+    height: 18px;
+    width: 18px;
+    margin-right: 8px;
+}
+
+.loginSignUpImage {
+    flex: 1;
+    background-color: #0b0b0b;
+    opacity: 1;
+    background-image: radial-gradient(#AE00FB 2px, #0b0b0b 2px);
+    background-size: 40px 40px;
+    padding: 32px;
+    display: flex;
+}
+
+.loginIllustrationText {
+    font-weight: 800;
+    font-size: 60px;
+    line-height: 60px;
+    margin: 0;
+}
+
+.loginIllustrationLogo {
+    height: 60px;
+    width: 60px;
+    margin-right: 25px;
+}
+
+@media screen and (max-width: 1025px) {
+    .loginIllustrationText {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .loginIllustrationLogo {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .loginSignUpImage {
+        display: none;
+    }
+
+    .loginSignupForm {
+        min-width: 200px;
+        flex: 1;
+    }
+}
