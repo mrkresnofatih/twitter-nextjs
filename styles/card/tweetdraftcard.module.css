@@ -1,0 +1,57 @@
+.tweetTagDraftContainer {
+    display: flex;
+}
+
+.tweetTagDraftContainer div {
+    flex: 1;
+}
+
+.tweetDraftInputSpace {
+    height: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 16px;
+}
+
+.tweetTagsCombinedText {
+    font-weight: 300;
+    font-size: 14px;
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+.tweetGiphyDrawer {
+    max-height: 200px;
+    overflow: auto;
+}
+
+.tweetDraftSpace {
+    height: 16px;
+}
+
+.tweetDraftSelectedImg {
+    display: flex;
+    padding: 8px;
+    background-color: rgb(32, 32, 32);
+    border-radius: 8px;
+    justify-content: space-between;
+}
+
+.tweetDraftSelectedImgContainer {
+    display: flex;
+}
+
+.tweetDraftSelectedImgContainer img {
+    height: 25px;
+    border-radius: 8px;
+}
+
+.tweetDraftSelectedImgContainer p {
+    height: 25px;
+    margin-left: 8px;
+    font-weight: 200;
+}
+
+.tweetDraftSelectedImgClose {
+    height: 25px;
+    width: 25px;
+}

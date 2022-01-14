@@ -7,8 +7,7 @@ import {Dictionary} from "../../types/dictionary";
 import {GreyButton} from "../button/GreyButton";
 import {Icon} from "../icon/Icon";
 import {IconFileNames} from "../../utils/iconUtils";
-import {useDispatch} from "react-redux";
-import {SetToken} from "../../tedux/auth/actions";
+import {loginApi} from "../../apis/authApi";
 
 type Props = {};
 export const LoginSignupScreen = (props: Props) => {
@@ -69,9 +68,8 @@ export const LoginSignupScreen = (props: Props) => {
     const onSignupSubmit = () => {
         console.log("SIGNUP EXECUTED!");
     };
-    const dispatch = useDispatch();
     const onLoginSubmit = () => {
-        dispatch(SetToken("loginToken"))
+        loginApi(loginForm.userName, loginForm.password);
     }
 
     const formComponent: ReactNode = isLoginMode ? (
@@ -169,7 +167,8 @@ const LoginForm = (props: loginFormProps) => {
                 onClick={props.onSubmit}
                 label={
                     <div className={styles.loginSignupButtonContent}>
-                        <Icon className={styles.loginSignupButtonIcon} iconFileName={IconFileNames.TWITTER_FILLED_WHITE}/>{" LOGIN"}
+                        <Icon className={styles.loginSignupButtonIcon}
+                              iconFileName={IconFileNames.TWITTER_FILLED_WHITE}/>{" LOGIN"}
                     </div>
                 }
             />
@@ -221,7 +220,8 @@ const SignUpForm = (props: signUpFormProps) => {
                 onClick={props.onSubmit}
                 label={
                     <div className={styles.loginSignupButtonContent}>
-                        <Icon className={styles.loginSignupButtonIcon} iconFileName={IconFileNames.TWITTER_FILLED_WHITE}/>{" SIGNUP"}
+                        <Icon className={styles.loginSignupButtonIcon}
+                              iconFileName={IconFileNames.TWITTER_FILLED_WHITE}/>{" SIGNUP"}
                     </div>
                 }
             />

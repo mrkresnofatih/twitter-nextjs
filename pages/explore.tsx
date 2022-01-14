@@ -5,12 +5,16 @@ import {BaseLayout} from "../components/layout/BaseLayout";
 import {ExploreHeader} from "../components/header/ExploreHeader";
 import {NavMenu} from "../components/nav/NavMenu";
 import {pageHeaders} from "../constants/pageHeaders";
-import {FeedUpdateNotification} from "../components/layout/FeedUpdateNotification";
 import {TweetCard} from "../components/card/TweetCard";
 import {FollowList} from "../components/list/FollowList";
 import {StoreWrapper} from "../tedux/StoreWrapper";
 import {useSelector} from "react-redux";
-import {authSelector} from "../tedux/auth/selectors";
+import {isAuthedSelector} from "../tedux/auth/selectors";
+import {DialogRenderer} from "../components/hoc/DialogRenderer";
+import {sysSelector} from "../tedux/sys/selectors";
+import {DialogModes} from "../constants/dialogModes";
+import {TrendCard} from "../components/card/TrendCard";
+import {BaseHeader} from "../components/header/BaseHeader";
 
 const Explore: NextPage = () => {
     return (
@@ -23,8 +27,8 @@ const Explore: NextPage = () => {
 export default Explore
 
 const ExploreComp = () => {
-    const {token} = useSelector(authSelector);
-    const isAuthed: boolean = (token === "loginToken");
+    const isAuthed: boolean = useSelector(isAuthedSelector);
+    const {dialogMode} = useSelector(sysSelector);
 
     return (
         <BaseLayout
@@ -35,7 +39,12 @@ const ExploreComp = () => {
             }
             middle={
                 <>
-                    <FeedUpdateNotification numOfUpdates={21}/>
+                    <TrendsHeader/>
+                    <TrendCard trendId={23}/>
+                    <TrendCard trendId={23}/>
+                    <TrendCard trendId={23}/>
+                    <TrendCard trendId={23}/>
+                    <LatestHeader/>
                     <TweetCard tweetId={32}/>
                     <TweetCard tweetId={12}/>
                     <TweetCard tweetId={29}/>
@@ -46,6 +55,20 @@ const ExploreComp = () => {
             header={<ExploreHeader/>}
             isLoading={false}
             isAuthenticated={isAuthed}
+            dialogComponent={<DialogRenderer/>}
+            isDialogMode={dialogMode !== DialogModes.NONE}
         />
+    )
+}
+
+const TrendsHeader = () => {
+    return (
+        <BaseHeader title={<h3>Trending</h3>} options={<div/>} isNavHeader={false}/>
+    )
+}
+
+const LatestHeader = () => {
+    return (
+        <BaseHeader title={<h3>Latest</h3>} options={<div/>} isNavHeader={false}/>
     )
 }

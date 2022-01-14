@@ -5,6 +5,7 @@ import styles from '../../styles/layout/layout.module.css';
 import {Icon} from "../icon/Icon";
 import {IconFileNames} from "../../utils/iconUtils";
 import {LoginSignupScreen} from "../screen/LoginSignupScreen";
+import {Backdrop} from "@mui/material";
 
 type Props = {
     left: ReactNode,
@@ -14,7 +15,9 @@ type Props = {
     hoverBottomLeft?: ReactNode,
     hoverBottomRight?: ReactNode,
     isLoading: boolean,
-    isAuthenticated: boolean
+    isAuthenticated: boolean,
+    isDialogMode: boolean,
+    dialogComponent: ReactNode
 };
 export const BaseLayout = (props: Props) => {
     const renderComponent: ReactNode = props.isAuthenticated ?
@@ -35,15 +38,34 @@ export const BaseLayout = (props: Props) => {
             <div className={styles.sideLayout}>{props.right}</div>
         </> : <LoginSignupScreen/>;
 
-    const loadingScreen: ReactNode = props.isLoading ?
-        <div className={styles.appLoadingOverlay}>
-            <Icon iconFileName={IconFileNames.LOADING}/>
-        </div> : <></>;
-
     return (
         <div className={styles.baseLayout}>
-            {loadingScreen}
+            <AppLoadingOverlay open={props.isLoading}/>
+            <AppDialogOverlay open={props.isDialogMode}>
+                {props.dialogComponent}
+            </AppDialogOverlay>
             {renderComponent}
         </div>
     );
 };
+
+const AppDialogOverlay = (props: {
+    open: boolean,
+    children: ReactNode
+}) => {
+    return (
+        <Backdrop sx={{zIndex: 130, backgroundColor: "rgba(28, 28, 28, 0.75)"}} open={props.open}>
+            {props.children}
+        </Backdrop>
+    )
+}
+
+const AppLoadingOverlay = (props: {
+    open: boolean
+}) => {
+    return (
+        <Backdrop sx={{zIndex: 140, backgroundColor: "rgba(28, 28, 28, 0.75)"}} open={props.open}>
+            <Icon iconFileName={IconFileNames.LOADING}/>
+        </Backdrop>
+    )
+}

@@ -9,7 +9,11 @@ import {TweetHoverButton} from "../components/button/TweetHoverButton";
 import {pageHeaders} from "../constants/pageHeaders";
 import {StoreWrapper} from "../tedux/StoreWrapper";
 import {useSelector} from "react-redux";
-import {authSelector} from "../tedux/auth/selectors";
+import {isAuthedSelector} from "../tedux/auth/selectors";
+import * as React from "react";
+import {DialogRenderer} from "../components/hoc/DialogRenderer";
+import {loadingStateSelector, sysSelector} from "../tedux/sys/selectors";
+import {DialogModes} from "../constants/dialogModes";
 
 const Home: NextPage = () => {
     return (
@@ -22,8 +26,9 @@ const Home: NextPage = () => {
 export default Home
 
 const HomeComp = () => {
-    const {token} = useSelector(authSelector);
-    const isAuthed: boolean = (token === "loginToken");
+    const isAuthed: boolean = useSelector(isAuthedSelector);
+    const {dialogMode} = useSelector(sysSelector);
+    const loadingState: boolean = useSelector(loadingStateSelector)
 
     return (
         <BaseLayout
@@ -50,8 +55,10 @@ const HomeComp = () => {
             right={
                 <FollowList/>
             }
-            isLoading={false}
+            isLoading={loadingState}
             isAuthenticated={isAuthed}
+            isDialogMode={dialogMode !== DialogModes.NONE}
+            dialogComponent={<DialogRenderer/>}
         />
     )
 }
