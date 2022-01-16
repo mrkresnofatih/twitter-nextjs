@@ -18,5 +18,6 @@ export enum IconFileNames {
     MENU_OUTLINE_PURPLE = "menu-outline-purple.png",
     HELP_OUTLINE_PURPLE = "help-outline-purple.png",
     HELP_OUTLINE_WHITE = "help-outline-white.png",
+    CLOSE_OUTLINE_WHITE = "close-outline-white.png",
     LOADING = "loading.svg"
 }

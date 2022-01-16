@@ -8,19 +8,26 @@ import {IconFileNames} from "../../utils/iconUtils";
 
 type Props = {
     title: ReactNode,
-    options: ReactNode
+    options: ReactNode,
+    isNavHeader?: boolean
 };
 export const BaseHeader = (props: Props) => {
+    const noNavButton = (props.isNavHeader !== undefined && props.isNavHeader === false)
+
+    const navButton = (noNavButton) ? <></> : (
+        <NavMenuDrawerButton buttonIcon={
+            <Icon
+                className={styles.navMenuIcon}
+                iconFileName={IconFileNames.MENU_OUTLINE_WHITE}
+            />
+        }/>
+    )
+
     return (
         <div className={styles.baseHeaderOuterContainer}>
             <div className={styles.baseHeaderInnerContainer}>
                 <div className={styles.baseHeaderSides}>
-                    <NavMenuDrawerButton buttonIcon={
-                        <Icon
-                            className={styles.navMenuIcon}
-                            iconFileName={IconFileNames.MENU_OUTLINE_WHITE}
-                        />
-                    }/>
+                    {navButton}
                     {props.title}
                 </div>
                 <div className={styles.baseHeaderSides}>{props.options}</div>
