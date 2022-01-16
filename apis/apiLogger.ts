@@ -1,0 +1,1 @@
+export const apiLogger = (...anything: any[]) => console.log("apiLogger: ", ...anything)

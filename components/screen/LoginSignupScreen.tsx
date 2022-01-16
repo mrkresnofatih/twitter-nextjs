@@ -7,13 +7,22 @@ import {Dictionary} from "../../types/dictionary";
 import {GreyButton} from "../button/GreyButton";
 import {Icon} from "../icon/Icon";
 import {IconFileNames} from "../../utils/iconUtils";
-import {loginApi} from "../../apis/authApi";
+import {requestLogin, requestSignup} from "../../apis/authApi";
+import {useSelector} from "react-redux";
+import {loginPageReqSelector} from "../../tedux/req/selector";
 
 type Props = {};
 export const LoginSignupScreen = (props: Props) => {
+    const loginPageReq = useSelector(loginPageReqSelector)
     const [loginForm, setLoginForm] = useState<loginForm>(initialLoginFormValues);
     const [signUpForm, setSignUpForm] = useState<signUpForm>(initialSignUpFormValues);
     const [isLoginMode, setIsLoginMode] = useState<boolean>(true);
+
+    useEffect(() => {
+        setLoginForm(initialLoginFormValues);
+        setSignUpForm(initialSignUpFormValues);
+        setIsLoginMode(true)
+    }, [loginPageReq])
 
     // loginMode Modifiers
     const toggleLoginMode = () => {
@@ -66,10 +75,10 @@ export const LoginSignupScreen = (props: Props) => {
 
     // onSubmit LoginForm/SignupForm
     const onSignupSubmit = () => {
-        console.log("SIGNUP EXECUTED!");
+        requestSignup(signUpForm.userName, signUpForm.password, signUpForm.fullName, signUpForm.email);
     };
     const onLoginSubmit = () => {
-        loginApi(loginForm.userName, loginForm.password);
+        requestLogin(loginForm.userName, loginForm.password);
     }
 
     const formComponent: ReactNode = isLoginMode ? (
@@ -87,14 +96,6 @@ export const LoginSignupScreen = (props: Props) => {
             onSubmit={onSignupSubmit}
         />
     )
-
-    useEffect(() => {
-        console.log("change: ", loginForm);
-    }, [loginForm])
-
-    useEffect(() => {
-        console.log("change: ", signUpForm);
-    }, [signUpForm])
 
 
     return (

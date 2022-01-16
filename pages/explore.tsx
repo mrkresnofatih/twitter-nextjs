@@ -11,8 +11,7 @@ import {StoreWrapper} from "../tedux/StoreWrapper";
 import {useSelector} from "react-redux";
 import {isAuthedSelector} from "../tedux/auth/selectors";
 import {DialogRenderer} from "../components/hoc/DialogRenderer";
-import {sysSelector} from "../tedux/sys/selectors";
-import {DialogModes} from "../constants/dialogModes";
+import {isDialogModeSelector} from "../tedux/sys/selectors";
 import {TrendCard} from "../components/card/TrendCard";
 import {BaseHeader} from "../components/header/BaseHeader";
 
@@ -28,15 +27,11 @@ export default Explore
 
 const ExploreComp = () => {
     const isAuthed: boolean = useSelector(isAuthedSelector);
-    const {dialogMode} = useSelector(sysSelector);
+    const dialogState: boolean = useSelector(isDialogModeSelector);
 
     return (
         <BaseLayout
-            left={
-                <NavMenu
-                    responsive={true}
-                    activeHeader={pageHeaders.EXPLORE}/>
-            }
+            left={<NavMenu responsive={true} activeHeader={pageHeaders.EXPLORE}/>}
             middle={
                 <>
                     <TrendsHeader/>
@@ -56,7 +51,7 @@ const ExploreComp = () => {
             isLoading={false}
             isAuthenticated={isAuthed}
             dialogComponent={<DialogRenderer/>}
-            isDialogMode={dialogMode !== DialogModes.NONE}
+            isDialogMode={dialogState}
         />
     )
 }

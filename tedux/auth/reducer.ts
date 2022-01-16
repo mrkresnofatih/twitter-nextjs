@@ -17,7 +17,7 @@ const authReducer = (state = authInitialState, action: AuthActionTypes) => {
                 ...state,
                 playerId: action.payload
             }
-            console.log(AuthActionNames.SET_PLAYER_ID_ACTION, newState);
+            console.log(action.type, newState);
             return newState;
         }
         case AuthActionNames.SET_TOKEN_ACTION: {
@@ -25,7 +25,7 @@ const authReducer = (state = authInitialState, action: AuthActionTypes) => {
                 ...state,
                 token: action.payload
             }
-            console.log(AuthActionNames.SET_TOKEN_ACTION, newState);
+            console.log(action.type, newState);
             return newState;
         }
         default:

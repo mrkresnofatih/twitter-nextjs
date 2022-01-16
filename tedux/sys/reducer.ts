@@ -18,7 +18,7 @@ const sysReducer = (state = sysInitialState, action: SysActionTypes) => {
                 ...state,
                 dialogMode: action.payload
             }
-            console.log(SysActionNames.SET_DIALOG_MODE, newState);
+            console.log(action.type, newState);
             return newState;
         }
         case SysActionNames.QUEUE_LOADING: {
@@ -26,7 +26,7 @@ const sysReducer = (state = sysInitialState, action: SysActionTypes) => {
                 ...state,
                 loadingQueue: state.loadingQueue + 1
             }
-            console.log(SysActionNames.QUEUE_LOADING, newState);
+            console.log(action.type, newState);
             return newState;
         }
         case SysActionNames.DROP_LOADING: {
@@ -34,7 +34,7 @@ const sysReducer = (state = sysInitialState, action: SysActionTypes) => {
                 ...state,
                 loadingQueue: state.loadingQueue - 1
             }
-            console.log(SysActionNames.DROP_LOADING, newState);
+            console.log(action.type, newState);
             return newState;
         }
         default:

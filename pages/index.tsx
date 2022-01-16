@@ -12,8 +12,7 @@ import {useSelector} from "react-redux";
 import {isAuthedSelector} from "../tedux/auth/selectors";
 import * as React from "react";
 import {DialogRenderer} from "../components/hoc/DialogRenderer";
-import {loadingStateSelector, sysSelector} from "../tedux/sys/selectors";
-import {DialogModes} from "../constants/dialogModes";
+import {isDialogModeSelector, loadingStateSelector} from "../tedux/sys/selectors";
 
 const Home: NextPage = () => {
     return (
@@ -27,20 +26,13 @@ export default Home
 
 const HomeComp = () => {
     const isAuthed: boolean = useSelector(isAuthedSelector);
-    const {dialogMode} = useSelector(sysSelector);
-    const loadingState: boolean = useSelector(loadingStateSelector)
+    const dialogState: boolean = useSelector(isDialogModeSelector);
+    const loadingState: boolean = useSelector(loadingStateSelector);
 
     return (
         <BaseLayout
-            header={
-                <HomeHeader/>
-            }
-            left={
-                <NavMenu
-                    activeHeader={pageHeaders.HOME}
-                    responsive={true}
-                />
-            }
+            header={<HomeHeader/>}
+            left={<NavMenu activeHeader={pageHeaders.HOME} responsive={true}/>}
             middle={
                 <>
                     <FeedUpdateNotification numOfUpdates={12}/>
@@ -49,15 +41,11 @@ const HomeComp = () => {
                     <TweetCard tweetId={11}/>
                 </>
             }
-            hoverBottomLeft={
-                <TweetHoverButton/>
-            }
-            right={
-                <FollowList/>
-            }
+            hoverBottomLeft={<TweetHoverButton/>}
+            right={<FollowList/>}
             isLoading={loadingState}
             isAuthenticated={isAuthed}
-            isDialogMode={dialogMode !== DialogModes.NONE}
+            isDialogMode={dialogState}
             dialogComponent={<DialogRenderer/>}
         />
     )
