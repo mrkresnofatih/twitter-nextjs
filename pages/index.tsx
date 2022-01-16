@@ -11,8 +11,10 @@ import {StoreWrapper} from "../tedux/StoreWrapper";
 import {useSelector} from "react-redux";
 import {isAuthedSelector} from "../tedux/auth/selectors";
 import * as React from "react";
+import {useEffect} from "react";
 import {DialogRenderer} from "../components/hoc/DialogRenderer";
 import {isDialogModeSelector, loadingStateSelector} from "../tedux/sys/selectors";
+import {requestGetHome, requestGetHomeLatest} from "../apis/homeApi";
 
 const Home: NextPage = () => {
     return (
@@ -34,12 +36,7 @@ const HomeComp = () => {
             header={<HomeHeader/>}
             left={<NavMenu activeHeader={pageHeaders.HOME} responsive={true}/>}
             middle={
-                <>
-                    <FeedUpdateNotification numOfUpdates={12}/>
-                    <TweetCard tweetId={6}/>
-                    <TweetCard tweetId={9}/>
-                    <TweetCard tweetId={11}/>
-                </>
+                <HomeFeed/>
             }
             hoverBottomLeft={<TweetHoverButton/>}
             right={<FollowList/>}
@@ -48,5 +45,20 @@ const HomeComp = () => {
             isDialogMode={dialogState}
             dialogComponent={<DialogRenderer/>}
         />
+    )
+}
+
+const HomeFeed = () => {
+    useEffect(() => {
+        requestGetHomeLatest()
+    }, [])
+
+    return (
+        <>
+            <FeedUpdateNotification numOfUpdates={12}/>
+            <TweetCard tweetId={6}/>
+            <TweetCard tweetId={9}/>
+            <TweetCard tweetId={11}/>
+        </>
     )
 }

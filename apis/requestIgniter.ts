@@ -8,43 +8,48 @@ import {apiLogger} from "./apiLogger";
 const hostApi = appConfig.apiUrl + "/api";
 
 export const postRequestIgniter = (
-    route: API_ROUTES,
+    route: string | API_ROUTES,
     data: any,
     config: any | undefined,
     errorDispatch: (errorCode: string) => reduxAction[],
     successDispatch: (result: any) => reduxAction[]
 ) => {
-    axios.post(hostApi + route, data, config).then((response) => {
-        const {result, errorCode} = response.data;
-        apiLogger(response);
-        if (errorCode !== null) {
-            batchDispatch([
-                ...(errorDispatch(errorCode))
-            ])
-        } else {
-            batchDispatch([
-                ...(successDispatch(result))
-            ])
-        }
-    })
+    setTimeout(() => {
+        axios.post(hostApi + route, data, config).then((response) => {
+            const {result, errorCode} = response.data;
+            apiLogger(response);
+            if (errorCode !== null) {
+                batchDispatch([
+                    ...(errorDispatch(errorCode))
+                ])
+            } else {
+                batchDispatch([
+                    ...(successDispatch(result))
+                ])
+            }
+        })
+    }, 2000)
 }
 
 export const getRequestIgniter = (
-    route: API_ROUTES,
+    route: API_ROUTES | string,
     config: any | undefined,
     errorDispatch: (errorCode: string) => reduxAction[],
     successDispatch: (result: any) => reduxAction[]
 ) => {
-    axios.get(hostApi + route, config).then((response) => {
-        const {result, errorCode} = response.data;
-        if (errorCode !== null) {
-            batchDispatch([
-                ...(errorDispatch(errorCode))
-            ])
-        } else {
-            batchDispatch([
-                ...(successDispatch(result))
-            ])
-        }
-    })
+    setTimeout(() => {
+        axios.get(hostApi + route, config).then((response) => {
+            apiLogger(response);
+            const {result, errorCode} = response.data;
+            if (errorCode !== null) {
+                batchDispatch([
+                    ...(errorDispatch(errorCode))
+                ])
+            } else {
+                batchDispatch([
+                    ...(successDispatch(result))
+                ])
+            }
+        })
+    }, 2000)
 }
