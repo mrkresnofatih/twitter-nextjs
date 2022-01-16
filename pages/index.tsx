@@ -27,7 +27,7 @@ const Home: NextPage = () => {
 export default Home
 
 const HomeComp = () => {
-    const isAuthed: boolean = useSelector(isAuthedSelector);
+    const isAuthed = useSelector(isAuthedSelector);
     const dialogState: boolean = useSelector(isDialogModeSelector);
     const loadingState: boolean = useSelector(loadingStateSelector);
 
