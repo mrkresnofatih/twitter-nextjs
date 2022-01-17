@@ -11,8 +11,7 @@ import {Grid} from "@giphy/react-components";
 import {useDebounce} from "use-debounce";
 import {Icon} from "../icon/Icon";
 import {IconFileNames} from "../../utils/iconUtils";
-import {useDispatch} from "react-redux";
-import {QueueLoading} from "../../tedux/sys/actions";
+import {requestPostTweet} from "../../apis/tweetApi";
 
 const giphyFetch = new GiphyFetch("sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh");
 
@@ -75,17 +74,16 @@ export const TweetDraftCard = (props: Props) => {
         }, 250)
     }, [giphyKw])
 
-    const dispatch = useDispatch();
-    const queueSampleLoading = () => dispatch(QueueLoading())
+    const postTweet = () => {
+        requestPostTweet(draft.message, draft.imageUrl, draft.tags);
+    }
 
     return (
         <DialogCard
             title={"Draft"}
             closable={true}
             onClose={props.onClose}
-            footerRight={
-                <PurpleButton onClick={queueSampleLoading} label={"POST"}/>
-            }
+            footerRight={<PurpleButton onClick={postTweet} label={"POST"}/>}
         >
             <PurpleTextFieldLight
                 label={"message"}
@@ -147,7 +145,7 @@ const GiphyGrid = (props: {
                         e.preventDefault();
                         props.setImageUrl(gif.images.downsized_medium.url)
                     }}
-                    width={350}
+                    width={375}
                     fetchGifs={fetchGifs(props.searchKeyword)}
                     columns={2}
                 />

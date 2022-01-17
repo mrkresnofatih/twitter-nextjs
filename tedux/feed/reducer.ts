@@ -36,6 +36,16 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
             console.log(action.type, newState);
             return newState;
         }
+        case FeedActionNames.ACCEPT_POST_TWEET: {
+            const newTweet = action.payload;
+            const newState: feedStateType = {
+                ...state,
+                tweets: { ...state.tweets, [newTweet.id]: newTweet },
+                feedIds: { ...state.feedIds, [newTweet.id]: true }
+            }
+            console.log(action.type, newState);
+            return newState;
+        }
         default:
             return state;
     }

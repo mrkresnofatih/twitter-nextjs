@@ -172,8 +172,6 @@ const PreTweet = (props: {
     replyOf: number
 }) => {
     const replyTweetData: Tweet = useSelector(specificFeedTweetSelector(props.replyOf));
-
-    console.log("x: ", replyTweetData)
     const playerData = useSelector(specificFeedPlayerSelector(replyTweetData.playerId));
     const timeStamp: string = getTimestamp(replyTweetData.createdAt);
 

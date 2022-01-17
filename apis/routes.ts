@@ -1,5 +1,6 @@
 export enum API_ROUTES {
     LOGIN = "/auth/login",
     SIGNUP = "/auth/signup",
-    GET_HOME = "/home/getHome"
+    GET_HOME = "/home/getHome",
+    POST_TWEET = "/tweet/post"
 }
