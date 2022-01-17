@@ -3,6 +3,7 @@ import {batchDispatch} from "../tedux/batchDispatch";
 import {DropLoading, QueueLoading} from "../tedux/sys/actions";
 import {getRequestIgniter} from "./requestIgniter";
 import {store} from "../tedux/store";
+import {AcceptGetHomeResponse} from "../tedux/feed/actions";
 
 interface getHomePayload {
     route: API_ROUTES.GET_HOME,
@@ -22,7 +23,10 @@ const homeAPIHandler = (payload: homeAPIPayloadTypes) => {
                 payload.endPoint,
                 payload.config,
                 () => [DropLoading()],
-                () => [DropLoading()]
+                (result) => [
+                    AcceptGetHomeResponse(result),
+                    DropLoading()
+                ]
             )
             break;
         }

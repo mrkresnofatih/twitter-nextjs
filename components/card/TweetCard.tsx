@@ -3,16 +3,19 @@ import * as React from 'react';
 import styles from '../../styles/card/tweetcard.module.css';
 import {Icon} from "../icon/Icon";
 import {IconFileNames} from "../../utils/iconUtils";
-import {getSampleTweet, Tweet} from "../../models/Tweet";
-import {getRandomTimestamp} from "../../utils/timeUtils";
-import {getSamplePlayer, Player} from "../../models/Player";
+import {Tweet} from "../../models/Tweet";
+import {getTimestamp} from "../../utils/timeUtils";
+import {Player} from "../../models/Player";
+import {useSelector} from "react-redux";
+import {specificFeedPlayerSelector, specificFeedTweetSelector} from "../../tedux/feed/selector";
+import {Image} from "../image/Image";
 
 type Props = {
     tweetId: number
 };
 export const TweetCard = (props: Props) => {
-    const tweetData: Tweet = getSampleTweet(props.tweetId);
-    const playerData: Player = getSamplePlayer(tweetData.playerId);
+    const tweetData: Tweet = useSelector(specificFeedTweetSelector(props.tweetId));
+    const playerData: Player = useSelector(specificFeedPlayerSelector(tweetData.playerId));
 
     const isReply: boolean = (tweetData.replyOf !== 0);
     const isRetweet: boolean = (tweetData.retweetOf !== 0);
@@ -20,8 +23,7 @@ export const TweetCard = (props: Props) => {
 
     return (
         <div className={styles.tweetCardContainer}>
-            <PreTweet replyOf={tweetData.replyOf}/>
-
+            {isReply && <PreTweet replyOf={tweetData.replyOf}/>}
             <div className={styles.tweetCard}>
                 <TweetCardMain tweetId={actualTweetId}/>
                 {isReply && <div className={styles.tweetHistoryLineDown}/>}
@@ -33,9 +35,9 @@ export const TweetCard = (props: Props) => {
 };
 
 const TweetCardMain = (props: { tweetId: number }) => {
-    const tweetData: Tweet = getSampleTweet(props.tweetId);
-    const playerData: Player = getSamplePlayer(tweetData.playerId);
-    const timeStamp: string = getRandomTimestamp(tweetData.createdAt);
+    const tweetData: Tweet = useSelector(specificFeedTweetSelector(props.tweetId));
+    const playerData: Player = useSelector(specificFeedPlayerSelector(tweetData.playerId));
+    const timeStamp: string = getTimestamp(tweetData.createdAt);
 
     return (
         <>
@@ -91,10 +93,9 @@ const TweetContentBody = (props: tweetContentBodyProp) => {
     return (
         <>
             <p className={styles.tweetCardMessage}>{props.message}</p>
-            <img
+            <Image
                 className={styles.tweetImage}
                 src={props.imageUrl}
-                alt={"image"}
             />
         </>
     )
@@ -170,9 +171,11 @@ const ReactionButton = (props: ReactionButtonData) => {
 const PreTweet = (props: {
     replyOf: number
 }) => {
-    const replyTweetData: Tweet = getSampleTweet(props.replyOf);
-    const playerData: Player = getSamplePlayer(replyTweetData.playerId);
-    const timeStamp: string = getRandomTimestamp(replyTweetData.createdAt);
+    const replyTweetData: Tweet = useSelector(specificFeedTweetSelector(props.replyOf));
+
+    console.log("x: ", replyTweetData)
+    const playerData = useSelector(specificFeedPlayerSelector(replyTweetData.playerId));
+    const timeStamp: string = getTimestamp(replyTweetData.createdAt);
 
     if (props.replyOf === 0) {
         return <></>;

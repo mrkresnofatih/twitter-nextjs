@@ -14,7 +14,8 @@ import * as React from "react";
 import {useEffect} from "react";
 import {DialogRenderer} from "../components/hoc/DialogRenderer";
 import {isDialogModeSelector, loadingStateSelector} from "../tedux/sys/selectors";
-import {requestGetHome, requestGetHomeLatest} from "../apis/homeApi";
+import {requestGetHomeLatest} from "../apis/homeApi";
+import {feedIdsSelector} from "../tedux/feed/selector";
 
 const Home: NextPage = () => {
     return (
@@ -49,6 +50,8 @@ const HomeComp = () => {
 }
 
 const HomeFeed = () => {
+    const feedIds = useSelector(feedIdsSelector);
+
     useEffect(() => {
         requestGetHomeLatest()
     }, [])
@@ -56,9 +59,9 @@ const HomeFeed = () => {
     return (
         <>
             <FeedUpdateNotification numOfUpdates={12}/>
-            <TweetCard tweetId={6}/>
-            <TweetCard tweetId={9}/>
-            <TweetCard tweetId={11}/>
+            {feedIds.map((id) => (
+                <TweetCard tweetId={id} key={id} />
+            ))}
         </>
     )
 }
