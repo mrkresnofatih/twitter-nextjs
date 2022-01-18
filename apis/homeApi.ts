@@ -19,12 +19,13 @@ const homeAPIHandler = (payload: homeAPIPayloadTypes) => {
     ]);
     switch (payload.route) {
         case API_ROUTES.GET_HOME: {
+            const playerId = store.getState().auth.playerId;
             getRequestIgniter(
                 payload.endPoint,
                 payload.config,
                 () => [DropLoading()],
                 (result) => [
-                    AcceptGetHomeResponse(result),
+                    AcceptGetHomeResponse(result, playerId),
                     DropLoading()
                 ]
             )

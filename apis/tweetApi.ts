@@ -3,7 +3,12 @@ import {batchDispatch} from "../tedux/batchDispatch";
 import {DropLoading, QueueLoading, SetDialogMode} from "../tedux/sys/actions";
 import {getRequestIgniter, postRequestIgniter} from "./requestIgniter";
 import {store} from "../tedux/store";
-import {AcceptBookmarkTweetResponse, AcceptLikeTweetResponse, AcceptPostTweetResponse} from "../tedux/feed/actions";
+import {
+    AcceptBookmarkTweetResponse,
+    AcceptLikeTweetResponse,
+    AcceptPostTweetResponse,
+    AcceptRetweetTweetResponse
+} from "../tedux/feed/actions";
 import {DialogModes} from "../constants/dialogModes";
 
 interface postTweetPayload {
@@ -24,7 +29,17 @@ interface bookmarkTweetPayload {
     config: { headers: { TK: string } }
 }
 
-type tweetAPIPayloadTypes = postTweetPayload | likeTweetPayload | bookmarkTweetPayload
+interface retweetTweetPayload {
+    route: API_ROUTES.RETWEET_TWEET,
+    endPoint: string,
+    config: { headers: { TK: string } }
+}
+
+type tweetAPIPayloadTypes =
+    postTweetPayload |
+    likeTweetPayload |
+    bookmarkTweetPayload |
+    retweetTweetPayload;
 
 const tweetAPIHandler = (payload: tweetAPIPayloadTypes) => {
     batchDispatch([
@@ -69,6 +84,17 @@ const tweetAPIHandler = (payload: tweetAPIPayloadTypes) => {
             )
             break;
         }
+        case API_ROUTES.RETWEET_TWEET: {
+            getRequestIgniter(
+                payload.endPoint,
+                payload.config,
+                () => [DropLoading()],
+                (result) => [
+                    AcceptRetweetTweetResponse(result),
+                    DropLoading()
+                ]
+            )
+        }
         default:
             break;
     }
@@ -105,6 +131,17 @@ export const requestBookmarkTweet = (
         route: API_ROUTES.BOOKMARK_TWEET,
         config: { headers: { TK: store.getState().auth.token } },
         endPoint: `${API_ROUTES.BOOKMARK_TWEET}/${tweetId}`
+    }
+    return tweetAPIHandler(payload)
+}
+
+export const requestRetweetTweet = (
+    tweetId: number
+) => {
+    const payload: retweetTweetPayload = {
+        route: API_ROUTES.RETWEET_TWEET,
+        config: { headers: { TK: store.getState().auth.token } },
+        endPoint: `${API_ROUTES.RETWEET_TWEET}/${tweetId}`
     }
     return tweetAPIHandler(payload)
 }

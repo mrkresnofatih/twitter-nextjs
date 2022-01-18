@@ -8,10 +8,15 @@ import {ReactionTypes} from "../../constants/reactionTypes";
 
 interface feedStateType {
     feedIds: Dictionary<boolean>,
+
     oldestTweetDate: number,
     tweets: Dictionary<Tweet>,
+    myRetweetIds: Dictionary<boolean>
+
     players: Dictionary<Player>,
+
     follows: Dictionary<Follow>,
+
     likes: Dictionary<Reaction>,
     bookmarks: Dictionary<Reaction>
 }
@@ -20,6 +25,7 @@ const feedInitialState: feedStateType = {
     feedIds: { },
     oldestTweetDate: 0,
     tweets: { },
+    myRetweetIds: { },
     follows: { },
     players: { },
     likes: { },
@@ -30,6 +36,7 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
     switch (action.type) {
         case FeedActionNames.ACCEPT_GET_HOME: {
             const newData = action.payload;
+            const myPlayerId = action.playerId
             let newOldestTweetDate = 0;
             Object.keys(newData.feedIds).forEach((feedId, index) => {
                 const feedTweetCreatedAt = newData.tweets[Number(feedId)].createdAt
@@ -45,6 +52,9 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
                 ...state,
                 feedIds: { ...state.feedIds, ...newData.feedIds },
                 tweets: { ...state.tweets, ...newData.tweets },
+                myRetweetIds: Object.values(newData.tweets)
+                    .filter((tweet) => (tweet.playerId === myPlayerId && tweet.retweetOf !== 0))
+                    .reduce((a, b) => ({ ...a, [b.retweetOf]: true }), {}),
                 follows: { ...state.follows, ...newData.follows },
                 players: { ...state.players, ...newData.players },
                 likes: Object.values(newData.reactions)
@@ -82,6 +92,18 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
             const newState: feedStateType = {
                 ...state,
                 bookmarks: { ...state.bookmarks, [newReaction.tweetId]: newReaction }
+            }
+            console.log(action.type, newState)
+            return newState;
+        }
+        case FeedActionNames.ACCEPT_RETWEET_TWEET: {
+            const tweets = action.payload
+            const retweet = Object.values(tweets).filter((tweet) => (tweet.retweetOf !== 0))[0]
+            const newState: feedStateType = {
+                ...state,
+                feedIds: { ...state.feedIds, [retweet.id]: true },
+                tweets: { ...state.tweets, ...tweets },
+                myRetweetIds: { ...state.myRetweetIds, [retweet.retweetOf]: true }
             }
             console.log(action.type, newState)
             return newState;

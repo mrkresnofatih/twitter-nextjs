@@ -10,6 +10,8 @@ export const specificFeedTweetSelector = (id: number) => (state: AllState): Twee
 
 export const specificFeedPlayerSelector = (id: number) => (state: AllState): Player => state.feed.players[id]
 
+export const myRetweetExistsSelector = (tweetId: number) => (state: AllState): boolean => (state.feed.myRetweetIds[tweetId] !== undefined)
+
 export const likeExistsSelector = (tweetId: number) => (state: AllState): boolean => (state.feed.likes[tweetId] !== undefined)
 
 export const bookmarkExistsSelector = (tweetId: number) => (state: AllState): boolean => (state.feed.bookmarks[tweetId] !== undefined)

@@ -10,11 +10,12 @@ import {useSelector} from "react-redux";
 import {
     bookmarkExistsSelector,
     likeExistsSelector,
+    myRetweetExistsSelector,
     specificFeedPlayerSelector,
     specificFeedTweetSelector
 } from "../../tedux/feed/selector";
 import {Image} from "../image/Image";
-import {requestBookmarkTweet, requestLikeTweet} from "../../apis/tweetApi";
+import {requestBookmarkTweet, requestLikeTweet, requestRetweetTweet} from "../../apis/tweetApi";
 
 type Props = {
     tweetId: number
@@ -124,6 +125,7 @@ const TweetContentHeader = (props: tweetContentHeaderProp) => {
 const TweetReactionDrawer = (props: { tweetId: number }) => {
     const isLiked = useSelector(likeExistsSelector(props.tweetId))
     const isBookmarked = useSelector(bookmarkExistsSelector(props.tweetId))
+    const isRetweeted = useSelector(myRetweetExistsSelector(props.tweetId))
     const reactionButtonDataList: ReactionButtonData[] = [
         {
             iconFileName: IconFileNames.REPLY_OUTLINE_WHITE,
@@ -134,8 +136,8 @@ const TweetReactionDrawer = (props: { tweetId: number }) => {
         {
             iconFileName: IconFileNames.RETWEET_OUTLINE_WHITE,
             hoverIconFileName: IconFileNames.RETWEET_OUTLINE_PURPLE,
-            isActive: false,
-            onClick: () => console.log("retweet")
+            isActive: isRetweeted,
+            onClick: () => requestRetweetTweet(props.tweetId)
         },
         {
             iconFileName: IconFileNames.LOVE_OUTLINE_WHITE,
