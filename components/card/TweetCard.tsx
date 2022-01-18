@@ -7,8 +7,14 @@ import {Tweet} from "../../models/Tweet";
 import {getTimestamp} from "../../utils/timeUtils";
 import {Player} from "../../models/Player";
 import {useSelector} from "react-redux";
-import {specificFeedPlayerSelector, specificFeedTweetSelector} from "../../tedux/feed/selector";
+import {
+    bookmarkExistsSelector,
+    likeExistsSelector,
+    specificFeedPlayerSelector,
+    specificFeedTweetSelector
+} from "../../tedux/feed/selector";
 import {Image} from "../image/Image";
+import {requestBookmarkTweet, requestLikeTweet} from "../../apis/tweetApi";
 
 type Props = {
     tweetId: number
@@ -53,7 +59,7 @@ const TweetCardMain = (props: { tweetId: number }) => {
                     replyUserName={playerData.userName}
                 />
                 <TagCollection tagNames={tweetData.tags}/>
-                <TweetReactionDrawer/>
+                <TweetReactionDrawer tweetId={tweetData.id}/>
             </div>
         </>
     )
@@ -115,23 +121,33 @@ const TweetContentHeader = (props: tweetContentHeaderProp) => {
     )
 }
 
-const TweetReactionDrawer = () => {
+const TweetReactionDrawer = (props: { tweetId: number }) => {
+    const isLiked = useSelector(likeExistsSelector(props.tweetId))
+    const isBookmarked = useSelector(bookmarkExistsSelector(props.tweetId))
     const reactionButtonDataList: ReactionButtonData[] = [
         {
             iconFileName: IconFileNames.REPLY_OUTLINE_WHITE,
-            hoverIconFileName: IconFileNames.REPLY_OUTLINE_PURPLE
+            hoverIconFileName: IconFileNames.REPLY_OUTLINE_PURPLE,
+            isActive: false,
+            onClick: () => console.log("reply"),
         },
         {
             iconFileName: IconFileNames.RETWEET_OUTLINE_WHITE,
-            hoverIconFileName: IconFileNames.RETWEET_OUTLINE_PURPLE
+            hoverIconFileName: IconFileNames.RETWEET_OUTLINE_PURPLE,
+            isActive: false,
+            onClick: () => console.log("retweet")
         },
         {
             iconFileName: IconFileNames.LOVE_OUTLINE_WHITE,
-            hoverIconFileName: IconFileNames.LOVE_OUTLINE_PURPLE
+            hoverIconFileName: IconFileNames.LOVE_OUTLINE_PURPLE,
+            isActive: isLiked,
+            onClick: () => requestLikeTweet(props.tweetId)
         },
         {
             iconFileName: IconFileNames.BOOKMARK_OUTLINE_WHITE,
-            hoverIconFileName: IconFileNames.BOOKMARK_OUTLINE_PURPLE
+            hoverIconFileName: IconFileNames.BOOKMARK_OUTLINE_PURPLE,
+            isActive: isBookmarked,
+            onClick: () => requestBookmarkTweet(props.tweetId)
         }
     ]
 
@@ -142,6 +158,8 @@ const TweetReactionDrawer = () => {
                     key={index}
                     iconFileName={reactionButtonData.iconFileName}
                     hoverIconFileName={reactionButtonData.hoverIconFileName}
+                    isActive={reactionButtonData.isActive}
+                    onClick={reactionButtonData.onClick}
                 />
             ))}
         </div>
@@ -150,12 +168,15 @@ const TweetReactionDrawer = () => {
 
 interface ReactionButtonData {
     iconFileName: IconFileNames,
-    hoverIconFileName: IconFileNames
+    hoverIconFileName: IconFileNames,
+    isActive: boolean,
+    onClick: () => void
 }
 
 const ReactionButton = (props: ReactionButtonData) => {
+    const isActiveStyle = props.isActive ? styles.tweetReactionButtonActive : undefined;
     return (
-        <div className={styles.tweetReactionButton}>
+        <div className={`${styles.tweetReactionButton} ${isActiveStyle}`} onClick={props.onClick}>
             <Icon
                 iconFileName={props.iconFileName}
                 className={styles.tweetReactionIcon}
@@ -192,7 +213,7 @@ const PreTweet = (props: {
                     imageUrl={replyTweetData.imageUrl}
                 />
                 <TagCollection tagNames={replyTweetData.tags}/>
-                <TweetReactionDrawer/>
+                <TweetReactionDrawer tweetId={props.replyOf}/>
             </div>
             <div className={styles.tweetHistoryLineUp}/>
             <div className={`${styles.tweetHighlight} ${styles.replyHighlight}`}>

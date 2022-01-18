@@ -4,6 +4,7 @@ import {Player} from "../../models/Player";
 import {Follow} from "../../models/Follow";
 import {Reaction} from "../../models/Reaction";
 import {FeedActionNames, FeedActionTypes} from "./actions";
+import {ReactionTypes} from "../../constants/reactionTypes";
 
 interface feedStateType {
     feedIds: Dictionary<boolean>,
@@ -11,7 +12,8 @@ interface feedStateType {
     tweets: Dictionary<Tweet>,
     players: Dictionary<Player>,
     follows: Dictionary<Follow>,
-    reactions: Dictionary<Reaction>
+    likes: Dictionary<Reaction>,
+    bookmarks: Dictionary<Reaction>
 }
 
 const feedInitialState: feedStateType = {
@@ -20,7 +22,8 @@ const feedInitialState: feedStateType = {
     tweets: { },
     follows: { },
     players: { },
-    reactions: { }
+    likes: { },
+    bookmarks: { }
 }
 
 const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
@@ -44,7 +47,12 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
                 tweets: { ...state.tweets, ...newData.tweets },
                 follows: { ...state.follows, ...newData.follows },
                 players: { ...state.players, ...newData.players },
-                reactions: { ...state.reactions, ...newData.reactions },
+                likes: Object.values(newData.reactions)
+                    .filter((reaction) => (reaction.reactionType === ReactionTypes.LIKE))
+                    .reduce((a, b) => ({ ...a, [b.tweetId]: b }), {}),
+                bookmarks: Object.values(newData.reactions)
+                    .filter((reaction) => (reaction.reactionType === ReactionTypes.BOOKMARK))
+                    .reduce((a, b) => ({ ...a, [b.tweetId]: b }), {}),
                 oldestTweetDate: newOldestTweetDate
             }
             console.log(action.type, newState);
@@ -58,6 +66,24 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
                 feedIds: { ...state.feedIds, [newTweet.id]: true }
             }
             console.log(action.type, newState);
+            return newState;
+        }
+        case FeedActionNames.ACCEPT_LIKE_TWEET: {
+            const newReaction = action.payload;
+            const newState: feedStateType = {
+                ...state,
+                likes: { ...state.likes, [newReaction.tweetId]: newReaction }
+            }
+            console.log(action.type, newState)
+            return newState;
+        }
+        case FeedActionNames.ACCEPT_BOOKMARK_TWEET: {
+            const newReaction = action.payload;
+            const newState: feedStateType = {
+                ...state,
+                bookmarks: { ...state.bookmarks, [newReaction.tweetId]: newReaction }
+            }
+            console.log(action.type, newState)
             return newState;
         }
         default:

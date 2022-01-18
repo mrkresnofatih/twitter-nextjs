@@ -90,6 +90,14 @@
     margin-bottom: 0;
 }
 
+.tweetReactionButtonActive .tweetReactionIcon {
+    display: none;
+}
+
+.tweetReactionButtonActive .tweetReactionHover {
+    display: block;
+}
+
 .tweetReactionButton:hover .tweetReactionIcon {
     display: none;
 }
