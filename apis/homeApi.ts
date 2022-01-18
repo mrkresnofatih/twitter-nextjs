@@ -44,10 +44,10 @@ export const requestGetHomeLatest = () => {
     return homeAPIHandler(payload);
 }
 
-export const requestGetHome = (time: number) => {
+export const requestGetHomeOlder = () => {
     const payload: getHomePayload = {
         route: API_ROUTES.GET_HOME,
-        endPoint: `${API_ROUTES.GET_HOME}/${time}`,
+        endPoint: `${API_ROUTES.GET_HOME}/${store.getState().feed.oldestTweetDate}`,
         config: { headers: { TK: store.getState().auth.token } }
     }
     return homeAPIHandler(payload);

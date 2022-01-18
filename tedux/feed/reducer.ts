@@ -7,6 +7,7 @@ import {FeedActionNames, FeedActionTypes} from "./actions";
 
 interface feedStateType {
     feedIds: Dictionary<boolean>,
+    oldestTweetDate: number,
     tweets: Dictionary<Tweet>,
     players: Dictionary<Player>,
     follows: Dictionary<Follow>,
@@ -15,6 +16,7 @@ interface feedStateType {
 
 const feedInitialState: feedStateType = {
     feedIds: { },
+    oldestTweetDate: 0,
     tweets: { },
     follows: { },
     players: { },
@@ -25,13 +27,25 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
     switch (action.type) {
         case FeedActionNames.ACCEPT_GET_HOME: {
             const newData = action.payload;
+            let newOldestTweetDate = 0;
+            Object.keys(newData.feedIds).forEach((feedId, index) => {
+                const feedTweetCreatedAt = newData.tweets[Number(feedId)].createdAt
+                if (index === 0) {
+                    newOldestTweetDate = feedTweetCreatedAt
+                } else {
+                    if (feedTweetCreatedAt < newOldestTweetDate) {
+                        newOldestTweetDate = feedTweetCreatedAt
+                    }
+                }
+            })
             const newState: feedStateType = {
                 ...state,
                 feedIds: { ...state.feedIds, ...newData.feedIds },
                 tweets: { ...state.tweets, ...newData.tweets },
                 follows: { ...state.follows, ...newData.follows },
                 players: { ...state.players, ...newData.players },
-                reactions: { ...state.reactions, ...newData.reactions }
+                reactions: { ...state.reactions, ...newData.reactions },
+                oldestTweetDate: newOldestTweetDate
             }
             console.log(action.type, newState);
             return newState;
