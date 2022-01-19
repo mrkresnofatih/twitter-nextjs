@@ -6,16 +6,18 @@ import {IconFileNames} from "../../utils/iconUtils";
 import {Tweet} from "../../models/Tweet";
 import {getTimestamp} from "../../utils/timeUtils";
 import {Player} from "../../models/Player";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     bookmarkExistsSelector,
-    likeExistsSelector,
+    likeExistsSelector, myReplyExistsSelector,
     myRetweetExistsSelector,
     specificFeedPlayerSelector,
     specificFeedTweetSelector
 } from "../../tedux/feed/selector";
 import {Image} from "../image/Image";
 import {requestBookmarkTweet, requestLikeTweet, requestRetweetTweet} from "../../apis/tweetApi";
+import {batchDispatch} from "../../tedux/batchDispatch";
+import {SetReplyDialogId} from "../../tedux/sys/actions";
 
 type Props = {
     tweetId: number
@@ -126,30 +128,37 @@ const TweetReactionDrawer = (props: { tweetId: number }) => {
     const isLiked = useSelector(likeExistsSelector(props.tweetId))
     const isBookmarked = useSelector(bookmarkExistsSelector(props.tweetId))
     const isRetweeted = useSelector(myRetweetExistsSelector(props.tweetId))
+    const isReplied = useSelector(myReplyExistsSelector(props.tweetId))
+
+    const dispatch = useDispatch()
+    const openReplyDialog = () => {
+        dispatch(SetReplyDialogId(props.tweetId))
+    }
+
     const reactionButtonDataList: ReactionButtonData[] = [
         {
             iconFileName: IconFileNames.REPLY_OUTLINE_WHITE,
             hoverIconFileName: IconFileNames.REPLY_OUTLINE_PURPLE,
-            isActive: false,
-            onClick: () => console.log("reply"),
+            isActive: isReplied,
+            onClick: isReplied ? ()=>{} : openReplyDialog,
         },
         {
             iconFileName: IconFileNames.RETWEET_OUTLINE_WHITE,
             hoverIconFileName: IconFileNames.RETWEET_OUTLINE_PURPLE,
             isActive: isRetweeted,
-            onClick: () => requestRetweetTweet(props.tweetId)
+            onClick: isRetweeted ? () => {} : () => requestRetweetTweet(props.tweetId)
         },
         {
             iconFileName: IconFileNames.LOVE_OUTLINE_WHITE,
             hoverIconFileName: IconFileNames.LOVE_OUTLINE_PURPLE,
             isActive: isLiked,
-            onClick: () => requestLikeTweet(props.tweetId)
+            onClick: isLiked ? () => {} : () => requestLikeTweet(props.tweetId)
         },
         {
             iconFileName: IconFileNames.BOOKMARK_OUTLINE_WHITE,
             hoverIconFileName: IconFileNames.BOOKMARK_OUTLINE_PURPLE,
             isActive: isBookmarked,
-            onClick: () => requestBookmarkTweet(props.tweetId)
+            onClick: isBookmarked ? ()=>{} : () => requestBookmarkTweet(props.tweetId)
         }
     ]
 

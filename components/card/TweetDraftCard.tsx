@@ -11,12 +11,14 @@ import {Grid} from "@giphy/react-components";
 import {useDebounce} from "use-debounce";
 import {Icon} from "../icon/Icon";
 import {IconFileNames} from "../../utils/iconUtils";
-import {requestPostTweet} from "../../apis/tweetApi";
 
 const giphyFetch = new GiphyFetch("sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh");
 
 type Props = {
-    onClose: () => void
+    onClose: () => void,
+    title: string | ReactNode,
+    onPost: (message: string, imageUrl: string, tags: string[]) => void,
+    postButtonText: string
 };
 export const TweetDraftCard = (props: Props) => {
     const [draft, setDraft] = useState<tweetDraft>(initialDraft);
@@ -75,15 +77,15 @@ export const TweetDraftCard = (props: Props) => {
     }, [giphyKw])
 
     const postTweet = () => {
-        requestPostTweet(draft.message, draft.imageUrl, draft.tags);
+        props.onPost(draft.message, draft.imageUrl, draft.tags);
     }
 
     return (
         <DialogCard
-            title={"Draft"}
+            title={props.title}
             closable={true}
             onClose={props.onClose}
-            footerRight={<PurpleButton onClick={postTweet} label={"POST"}/>}
+            footerRight={<PurpleButton onClick={postTweet} label={props.postButtonText}/>}
         >
             <PurpleTextFieldLight
                 label={"message"}

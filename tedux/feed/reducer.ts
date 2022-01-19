@@ -11,7 +11,8 @@ interface feedStateType {
 
     oldestTweetDate: number,
     tweets: Dictionary<Tweet>,
-    myRetweetIds: Dictionary<boolean>
+    myRetweetIds: Dictionary<boolean>,
+    myReplyIds: Dictionary<boolean>,
 
     players: Dictionary<Player>,
 
@@ -26,6 +27,7 @@ const feedInitialState: feedStateType = {
     oldestTweetDate: 0,
     tweets: { },
     myRetweetIds: { },
+    myReplyIds: { },
     follows: { },
     players: { },
     likes: { },
@@ -52,17 +54,24 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
                 ...state,
                 feedIds: { ...state.feedIds, ...newData.feedIds },
                 tweets: { ...state.tweets, ...newData.tweets },
-                myRetweetIds: Object.values(newData.tweets)
+
+                myRetweetIds: { ...state.myRetweetIds, ...(Object.values(newData.tweets)
                     .filter((tweet) => (tweet.playerId === myPlayerId && tweet.retweetOf !== 0))
-                    .reduce((a, b) => ({ ...a, [b.retweetOf]: true }), {}),
+                    .reduce((a, b) => ({ ...a, [b.retweetOf]: true }), {})) },
+
+                myReplyIds: { ...state.myReplyIds, ...(Object.values(newData.tweets)
+                    .filter((tweet) => (tweet.playerId === myPlayerId && tweet.replyOf !== 0))
+                    .reduce((a, b) => ({...a, [b.replyOf]: true}), {})) },
+
                 follows: { ...state.follows, ...newData.follows },
                 players: { ...state.players, ...newData.players },
-                likes: Object.values(newData.reactions)
+
+                likes: { ...state.likes, ...(Object.values(newData.reactions)
                     .filter((reaction) => (reaction.reactionType === ReactionTypes.LIKE))
-                    .reduce((a, b) => ({ ...a, [b.tweetId]: b }), {}),
-                bookmarks: Object.values(newData.reactions)
+                    .reduce((a, b) => ({ ...a, [b.tweetId]: b }), {}))},
+                bookmarks: { ...state.bookmarks, ...(Object.values(newData.reactions)
                     .filter((reaction) => (reaction.reactionType === ReactionTypes.BOOKMARK))
-                    .reduce((a, b) => ({ ...a, [b.tweetId]: b }), {}),
+                    .reduce((a, b) => ({...a, [b.tweetId]: b}), {})) },
                 oldestTweetDate: newOldestTweetDate
             }
             console.log(action.type, newState);
@@ -104,6 +113,18 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
                 feedIds: { ...state.feedIds, [retweet.id]: true },
                 tweets: { ...state.tweets, ...tweets },
                 myRetweetIds: { ...state.myRetweetIds, [retweet.retweetOf]: true }
+            }
+            console.log(action.type, newState)
+            return newState;
+        }
+        case FeedActionNames.ACCEPT_REPLY_TWEET: {
+            const tweets = action.payload
+            const reply = Object.values(tweets).filter((tweet) => (tweet.replyOf !== 0))[0]
+            const newState: feedStateType = {
+                ...state,
+                feedIds: { ...state.feedIds, [reply.id]: true },
+                tweets: { ...state.tweets, ...tweets },
+                myReplyIds: { ...state.myReplyIds, [reply.replyOf]: true }
             }
             console.log(action.type, newState)
             return newState;

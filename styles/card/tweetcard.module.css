@@ -96,6 +96,7 @@
 
 .tweetReactionButtonActive .tweetReactionHover {
     display: block;
+    cursor: default !important;
 }
 
 .tweetReactionButton:hover .tweetReactionIcon {

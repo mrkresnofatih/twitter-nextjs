@@ -8,7 +8,8 @@ export enum FeedActionNames {
     ACCEPT_POST_TWEET = "FEED/ACCEPT_POST_TWEET",
     ACCEPT_LIKE_TWEET = "FEED/ACCEPT_LIKE_TWEET",
     ACCEPT_BOOKMARK_TWEET = "FEED/ACCEPT_BOOKMARK_TWEET",
-    ACCEPT_RETWEET_TWEET = "FEED/ACCEPT_RETWEET_TWEET"
+    ACCEPT_RETWEET_TWEET = "FEED/ACCEPT_RETWEET_TWEET",
+    ACCEPT_REPLY_TWEET = "FEED/ACCEPT_REPLY_TWEET"
 }
 
 interface AcceptGetHomeResponseActionType {
@@ -34,6 +35,11 @@ interface AcceptBookmarkTweetResponseActionType {
 
 interface AcceptRetweetTweetResponseActionType {
     type: FeedActionNames.ACCEPT_RETWEET_TWEET,
+    payload: Dictionary<Tweet>
+}
+
+interface AcceptReplyTweetResponseActionType {
+    type: FeedActionNames.ACCEPT_REPLY_TWEET,
     payload: Dictionary<Tweet>
 }
 
@@ -73,9 +79,17 @@ export const AcceptRetweetTweetResponse = (payload: Dictionary<Tweet>): AcceptRe
     }
 }
 
+export const AcceptReplyTweetResponse = (payload: Dictionary<Tweet>): AcceptReplyTweetResponseActionType => {
+    return {
+        type: FeedActionNames.ACCEPT_REPLY_TWEET,
+        payload
+    }
+}
+
 export type FeedActionTypes =
     AcceptGetHomeResponseActionType |
     AcceptPostTweetResponseActionType |
     AcceptLikeTweetResponseActionType |
     AcceptBookmarkTweetResponseActionType |
-    AcceptRetweetTweetResponseActionType;
+    AcceptRetweetTweetResponseActionType |
+    AcceptReplyTweetResponseActionType;

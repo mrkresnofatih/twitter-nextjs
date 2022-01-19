@@ -7,6 +7,7 @@ import {
     AcceptBookmarkTweetResponse,
     AcceptLikeTweetResponse,
     AcceptPostTweetResponse,
+    AcceptReplyTweetResponse,
     AcceptRetweetTweetResponse
 } from "../tedux/feed/actions";
 import {DialogModes} from "../constants/dialogModes";
@@ -35,11 +36,19 @@ interface retweetTweetPayload {
     config: { headers: { TK: string } }
 }
 
+interface replyTweetPayload {
+    route: API_ROUTES.REPLY_TWEET,
+    endPoint: string,
+    data: { message: string, imageUrl: string, tags: string[] },
+    config: { headers: { TK: string } }
+}
+
 type tweetAPIPayloadTypes =
     postTweetPayload |
     likeTweetPayload |
     bookmarkTweetPayload |
-    retweetTweetPayload;
+    retweetTweetPayload |
+    replyTweetPayload;
 
 const tweetAPIHandler = (payload: tweetAPIPayloadTypes) => {
     batchDispatch([
@@ -94,6 +103,21 @@ const tweetAPIHandler = (payload: tweetAPIPayloadTypes) => {
                     DropLoading()
                 ]
             )
+            break;
+        }
+        case API_ROUTES.REPLY_TWEET: {
+            postRequestIgniter(
+                payload.endPoint,
+                payload.data,
+                payload.config,
+                () => [DropLoading()],
+                (result) => [
+                    AcceptReplyTweetResponse(result),
+                    SetDialogMode(DialogModes.NONE),
+                    DropLoading()
+                ]
+            )
+            break;
         }
         default:
             break;
@@ -111,6 +135,21 @@ export const requestPostTweet = (
         data: { message, imageUrl, tags }
     }
     return tweetAPIHandler(payload);
+}
+
+export const requestReplyTweet = (
+    message: string,
+    imageUrl: string,
+    tags: string[],
+    targetTweetId: number
+) => {
+    const payload: replyTweetPayload = {
+        route: API_ROUTES.REPLY_TWEET,
+        endPoint: `${API_ROUTES.REPLY_TWEET}/${targetTweetId}`,
+        config: { headers: { TK: store.getState().auth.token } },
+        data: { message, imageUrl, tags }
+    }
+    return tweetAPIHandler(payload)
 }
 
 export const requestLikeTweet = (
