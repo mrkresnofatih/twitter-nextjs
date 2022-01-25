@@ -22,10 +22,6 @@ export const getTimestamp = (time: number): string => {
     }
 }
 
-export const getRandomTimestamp = (time: number): string => {
-    return getTimestamp(new Date().getTime() - 200000);
-}
-
 const OneSecond: number = 1000;
 const OneMinute: number = 60 * OneSecond;
 const OneHour: number = 60 * OneMinute;

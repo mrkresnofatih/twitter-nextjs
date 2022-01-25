@@ -7,6 +7,7 @@ import {Persistor} from "redux-persist/es/types";
 import {SysActionTypes} from "./sys/actions";
 import {AuthActionTypes} from "./auth/actions";
 import {ReqActionTypes} from "./req/action";
+import {FeedActionTypes} from "./feed/actions";
 
 const persistConfig = {
     key:"twitterclone",
@@ -24,4 +25,4 @@ export const store: Store = createStore(
 
 export const persistor: Persistor = persistStore(store);
 
-export type reduxAction = SysActionTypes | AuthActionTypes | ReqActionTypes;
+export type reduxAction = SysActionTypes | AuthActionTypes | ReqActionTypes | FeedActionTypes;

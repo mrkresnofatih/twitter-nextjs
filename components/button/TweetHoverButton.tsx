@@ -13,7 +13,7 @@ type Props = {
 export const TweetHoverButton = (props: Props) => {
     const dispatch = useDispatch();
     const openTweetDraftDialog = () => {
-        dispatch(SetDialogMode(DialogModes.TWEET_DRAFT))
+        dispatch(SetDialogMode(DialogModes.TWEET_POST))
     }
     return (
         <div className={styles.tweetHoverButton} onClick={openTweetDraftDialog}>

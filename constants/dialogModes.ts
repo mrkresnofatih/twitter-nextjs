@@ -1,4 +1,5 @@
 export enum DialogModes {
-    TWEET_DRAFT = "TWEET_DRAFT",
+    TWEET_POST = "TWEET_POST",
+    TWEET_REPLY = "TWEET_REPLY",
     NONE = "NONE"
 }

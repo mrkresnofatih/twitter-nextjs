@@ -69,7 +69,7 @@
 }
 
 .tweetReactionContainer {
-    margin: 16px 0 0 0;
+    margin: 8px 0 0 0;
     display: flex;
     justify-content: space-around;
 }
@@ -86,7 +86,17 @@
 }
 
 .tweetReactionButton {
+    display: flex;
+    margin-bottom: 0;
+}
+
+.tweetReactionButtonActive .tweetReactionIcon {
+    display: none;
+}
+
+.tweetReactionButtonActive .tweetReactionHover {
     display: block;
+    cursor: default !important;
 }
 
 .tweetReactionButton:hover .tweetReactionIcon {
@@ -161,5 +171,5 @@
 }
 
 .tagCollection {
-    padding: 16px 0 0 0;
+    padding: 8px 0 0 0;
 }

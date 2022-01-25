@@ -3,7 +3,8 @@ import {DialogModes} from "../../constants/dialogModes";
 export enum SysActionNames {
     QUEUE_LOADING = "SYS/QUEUE_LOADING",
     SET_DIALOG_MODE = "SYS/SET_DIALOG_MODE",
-    DROP_LOADING = "SYS/DROP_LOADING"
+    DROP_LOADING = "SYS/DROP_LOADING",
+    SET_REPLY_DIALOG_ID = "SYS/SET_REPLY_DIALOG_ID"
 }
 
 interface QueueLoadingActionType {
@@ -39,7 +40,20 @@ export const DropLoading = (): DropLoadingActionType => {
     }
 }
 
+interface SetReplyDialogIdActionType {
+    type: SysActionNames.SET_REPLY_DIALOG_ID,
+    payload: number
+}
+
+export const SetReplyDialogId = (replyDialogId: number): SetReplyDialogIdActionType => {
+    return {
+        type: SysActionNames.SET_REPLY_DIALOG_ID,
+        payload: replyDialogId
+    }
+}
+
 export type SysActionTypes =
     QueueLoadingActionType |
     SetDialogModeActionType |
-    DropLoadingActionType;
+    DropLoadingActionType |
+    SetReplyDialogIdActionType;

@@ -3,10 +3,11 @@ import * as React from 'react';
 import styles from '../../styles/layout/feedupdatenotification.module.css';
 
 type Props = {
-    numOfUpdates: number
+    numOfUpdates: number,
+    onClick?: () => void
 };
 export const FeedUpdateNotification = (props: Props) => {
     return (
-        <div className={styles.feedUpdateNotifContainer}>{`+${props.numOfUpdates} New Updates!`}</div>
+        <div onClick={props.onClick} className={styles.feedUpdateNotifContainer}>{`+${props.numOfUpdates} New Updates!`}</div>
     );
 };

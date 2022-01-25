@@ -3,6 +3,7 @@ import {batchDispatch} from "../tedux/batchDispatch";
 import {DropLoading, QueueLoading} from "../tedux/sys/actions";
 import {getRequestIgniter} from "./requestIgniter";
 import {store} from "../tedux/store";
+import {AcceptGetHomeResponse} from "../tedux/feed/actions";
 
 interface getHomePayload {
     route: API_ROUTES.GET_HOME,
@@ -18,11 +19,15 @@ const homeAPIHandler = (payload: homeAPIPayloadTypes) => {
     ]);
     switch (payload.route) {
         case API_ROUTES.GET_HOME: {
+            const playerId = store.getState().auth.playerId;
             getRequestIgniter(
                 payload.endPoint,
                 payload.config,
                 () => [DropLoading()],
-                () => [DropLoading()]
+                (result) => [
+                    AcceptGetHomeResponse(result, playerId),
+                    DropLoading()
+                ]
             )
             break;
         }
@@ -40,10 +45,10 @@ export const requestGetHomeLatest = () => {
     return homeAPIHandler(payload);
 }
 
-export const requestGetHome = (time: number) => {
+export const requestGetHomeOlder = () => {
     const payload: getHomePayload = {
         route: API_ROUTES.GET_HOME,
-        endPoint: `${API_ROUTES.GET_HOME}/${time}`,
+        endPoint: `${API_ROUTES.GET_HOME}/${store.getState().feed.oldestTweetDate}`,
         config: { headers: { TK: store.getState().auth.token } }
     }
     return homeAPIHandler(payload);

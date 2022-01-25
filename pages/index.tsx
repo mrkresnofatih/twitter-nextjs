@@ -11,10 +11,13 @@ import {StoreWrapper} from "../tedux/StoreWrapper";
 import {useSelector} from "react-redux";
 import {isAuthedSelector} from "../tedux/auth/selectors";
 import * as React from "react";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {DialogRenderer} from "../components/hoc/DialogRenderer";
 import {isDialogModeSelector, loadingStateSelector} from "../tedux/sys/selectors";
-import {requestGetHome, requestGetHomeLatest} from "../apis/homeApi";
+import {requestGetHomeLatest, requestGetHomeOlder} from "../apis/homeApi";
+import {feedIdsSelector} from "../tedux/feed/selector";
+import {LoadOlderTweetsButton} from "../components/layout/LoadOlderTweetsButton";
+import {FeedNotificationLoader} from "../components/hoc/FeedNotificationLoader";
 
 const Home: NextPage = () => {
     return (
@@ -27,7 +30,7 @@ const Home: NextPage = () => {
 export default Home
 
 const HomeComp = () => {
-    const isAuthed: boolean = useSelector(isAuthedSelector);
+    const isAuthed = useSelector(isAuthedSelector);
     const dialogState: boolean = useSelector(isDialogModeSelector);
     const loadingState: boolean = useSelector(loadingStateSelector);
 
@@ -49,16 +52,43 @@ const HomeComp = () => {
 }
 
 const HomeFeed = () => {
+    const [getHomeLatestMode, setGetHomeLatestMode] = useState<boolean>(true)
+    const [getHomeRequestCounter, setGetHomeRequestCounter] = useState<number>(0)
+    const feedIds = useSelector(feedIdsSelector);
+
     useEffect(() => {
-        requestGetHomeLatest()
-    }, [])
+        if (getHomeLatestMode) {
+            console.log("latest")
+            requestGetHomeLatest()
+        } else {
+            console.log("older")
+            requestGetHomeOlder()
+        }
+    }, [getHomeRequestCounter])
+
+    const triggerGetHomeAPI = () => setGetHomeRequestCounter(i => i + 1)
+
+    const triggerGetHomeLatest = () => {
+        if (!getHomeLatestMode) {
+            setGetHomeLatestMode(true)
+        }
+        triggerGetHomeAPI()
+    }
+
+    const triggerGetHomeOlder = () => {
+        if (getHomeLatestMode) {
+            setGetHomeLatestMode(false)
+        }
+        triggerGetHomeAPI()
+    }
 
     return (
         <>
-            <FeedUpdateNotification numOfUpdates={12}/>
-            <TweetCard tweetId={6}/>
-            <TweetCard tweetId={9}/>
-            <TweetCard tweetId={11}/>
+            <FeedNotificationLoader onClick={triggerGetHomeLatest}/>
+            {feedIds.map((id) => (
+                <TweetCard tweetId={id} key={id}/>
+            ))}
+            <LoadOlderTweetsButton onClick={triggerGetHomeOlder}/>
         </>
     )
 }

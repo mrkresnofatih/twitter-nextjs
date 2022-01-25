@@ -13,7 +13,7 @@ const reqReducer = (state = reqInitialState, action: ReqActionTypes) => {
         case ReqActionNames.RECORD_LOGIN_SIGNUP: {
             const newState: reqStateType = {
                 ...state,
-                loginSignupLastReq: state.loginSignupLastReq + 1
+                loginSignupLastReq: Date.now()
             }
             console.log(action.type, newState);
             return newState;

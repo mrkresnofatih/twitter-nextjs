@@ -3,16 +3,28 @@ import * as React from 'react';
 import styles from '../../styles/card/tweetcard.module.css';
 import {Icon} from "../icon/Icon";
 import {IconFileNames} from "../../utils/iconUtils";
-import {getSampleTweet, Tweet} from "../../models/Tweet";
-import {getRandomTimestamp} from "../../utils/timeUtils";
-import {getSamplePlayer, Player} from "../../models/Player";
+import {Tweet} from "../../models/Tweet";
+import {getTimestamp} from "../../utils/timeUtils";
+import {Player} from "../../models/Player";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    bookmarkExistsSelector,
+    likeExistsSelector, myReplyExistsSelector,
+    myRetweetExistsSelector,
+    specificFeedPlayerSelector,
+    specificFeedTweetSelector
+} from "../../tedux/feed/selector";
+import {Image} from "../image/Image";
+import {requestBookmarkTweet, requestLikeTweet, requestRetweetTweet} from "../../apis/tweetApi";
+import {batchDispatch} from "../../tedux/batchDispatch";
+import {SetReplyDialogId} from "../../tedux/sys/actions";
 
 type Props = {
     tweetId: number
 };
 export const TweetCard = (props: Props) => {
-    const tweetData: Tweet = getSampleTweet(props.tweetId);
-    const playerData: Player = getSamplePlayer(tweetData.playerId);
+    const tweetData: Tweet = useSelector(specificFeedTweetSelector(props.tweetId));
+    const playerData: Player = useSelector(specificFeedPlayerSelector(tweetData.playerId));
 
     const isReply: boolean = (tweetData.replyOf !== 0);
     const isRetweet: boolean = (tweetData.retweetOf !== 0);
@@ -20,8 +32,7 @@ export const TweetCard = (props: Props) => {
 
     return (
         <div className={styles.tweetCardContainer}>
-            <PreTweet replyOf={tweetData.replyOf}/>
-
+            {isReply && <PreTweet replyOf={tweetData.replyOf}/>}
             <div className={styles.tweetCard}>
                 <TweetCardMain tweetId={actualTweetId}/>
                 {isReply && <div className={styles.tweetHistoryLineDown}/>}
@@ -33,9 +44,9 @@ export const TweetCard = (props: Props) => {
 };
 
 const TweetCardMain = (props: { tweetId: number }) => {
-    const tweetData: Tweet = getSampleTweet(props.tweetId);
-    const playerData: Player = getSamplePlayer(tweetData.playerId);
-    const timeStamp: string = getRandomTimestamp(tweetData.createdAt);
+    const tweetData: Tweet = useSelector(specificFeedTweetSelector(props.tweetId));
+    const playerData: Player = useSelector(specificFeedPlayerSelector(tweetData.playerId));
+    const timeStamp: string = getTimestamp(tweetData.createdAt);
 
     return (
         <>
@@ -51,7 +62,7 @@ const TweetCardMain = (props: { tweetId: number }) => {
                     replyUserName={playerData.userName}
                 />
                 <TagCollection tagNames={tweetData.tags}/>
-                <TweetReactionDrawer/>
+                <TweetReactionDrawer tweetId={tweetData.id}/>
             </div>
         </>
     )
@@ -91,10 +102,9 @@ const TweetContentBody = (props: tweetContentBodyProp) => {
     return (
         <>
             <p className={styles.tweetCardMessage}>{props.message}</p>
-            <img
+            <Image
                 className={styles.tweetImage}
                 src={props.imageUrl}
-                alt={"image"}
             />
         </>
     )
@@ -114,23 +124,41 @@ const TweetContentHeader = (props: tweetContentHeaderProp) => {
     )
 }
 
-const TweetReactionDrawer = () => {
+const TweetReactionDrawer = (props: { tweetId: number }) => {
+    const isLiked = useSelector(likeExistsSelector(props.tweetId))
+    const isBookmarked = useSelector(bookmarkExistsSelector(props.tweetId))
+    const isRetweeted = useSelector(myRetweetExistsSelector(props.tweetId))
+    const isReplied = useSelector(myReplyExistsSelector(props.tweetId))
+
+    const dispatch = useDispatch()
+    const openReplyDialog = () => {
+        dispatch(SetReplyDialogId(props.tweetId))
+    }
+
     const reactionButtonDataList: ReactionButtonData[] = [
         {
             iconFileName: IconFileNames.REPLY_OUTLINE_WHITE,
-            hoverIconFileName: IconFileNames.REPLY_OUTLINE_PURPLE
+            hoverIconFileName: IconFileNames.REPLY_OUTLINE_PURPLE,
+            isActive: isReplied,
+            onClick: isReplied ? ()=>{} : openReplyDialog,
         },
         {
             iconFileName: IconFileNames.RETWEET_OUTLINE_WHITE,
-            hoverIconFileName: IconFileNames.RETWEET_OUTLINE_PURPLE
+            hoverIconFileName: IconFileNames.RETWEET_OUTLINE_PURPLE,
+            isActive: isRetweeted,
+            onClick: isRetweeted ? () => {} : () => requestRetweetTweet(props.tweetId)
         },
         {
             iconFileName: IconFileNames.LOVE_OUTLINE_WHITE,
-            hoverIconFileName: IconFileNames.LOVE_OUTLINE_PURPLE
+            hoverIconFileName: IconFileNames.LOVE_OUTLINE_PURPLE,
+            isActive: isLiked,
+            onClick: isLiked ? () => {} : () => requestLikeTweet(props.tweetId)
         },
         {
             iconFileName: IconFileNames.BOOKMARK_OUTLINE_WHITE,
-            hoverIconFileName: IconFileNames.BOOKMARK_OUTLINE_PURPLE
+            hoverIconFileName: IconFileNames.BOOKMARK_OUTLINE_PURPLE,
+            isActive: isBookmarked,
+            onClick: isBookmarked ? ()=>{} : () => requestBookmarkTweet(props.tweetId)
         }
     ]
 
@@ -141,6 +169,8 @@ const TweetReactionDrawer = () => {
                     key={index}
                     iconFileName={reactionButtonData.iconFileName}
                     hoverIconFileName={reactionButtonData.hoverIconFileName}
+                    isActive={reactionButtonData.isActive}
+                    onClick={reactionButtonData.onClick}
                 />
             ))}
         </div>
@@ -149,12 +179,15 @@ const TweetReactionDrawer = () => {
 
 interface ReactionButtonData {
     iconFileName: IconFileNames,
-    hoverIconFileName: IconFileNames
+    hoverIconFileName: IconFileNames,
+    isActive: boolean,
+    onClick: () => void
 }
 
 const ReactionButton = (props: ReactionButtonData) => {
+    const isActiveStyle = props.isActive ? styles.tweetReactionButtonActive : undefined;
     return (
-        <div className={styles.tweetReactionButton}>
+        <div className={`${styles.tweetReactionButton} ${isActiveStyle}`} onClick={props.onClick}>
             <Icon
                 iconFileName={props.iconFileName}
                 className={styles.tweetReactionIcon}
@@ -170,9 +203,9 @@ const ReactionButton = (props: ReactionButtonData) => {
 const PreTweet = (props: {
     replyOf: number
 }) => {
-    const replyTweetData: Tweet = getSampleTweet(props.replyOf);
-    const playerData: Player = getSamplePlayer(replyTweetData.playerId);
-    const timeStamp: string = getRandomTimestamp(replyTweetData.createdAt);
+    const replyTweetData: Tweet = useSelector(specificFeedTweetSelector(props.replyOf));
+    const playerData = useSelector(specificFeedPlayerSelector(replyTweetData.playerId));
+    const timeStamp: string = getTimestamp(replyTweetData.createdAt);
 
     if (props.replyOf === 0) {
         return <></>;
@@ -191,7 +224,7 @@ const PreTweet = (props: {
                     imageUrl={replyTweetData.imageUrl}
                 />
                 <TagCollection tagNames={replyTweetData.tags}/>
-                <TweetReactionDrawer/>
+                <TweetReactionDrawer tweetId={props.replyOf}/>
             </div>
             <div className={styles.tweetHistoryLineUp}/>
             <div className={`${styles.tweetHighlight} ${styles.replyHighlight}`}>

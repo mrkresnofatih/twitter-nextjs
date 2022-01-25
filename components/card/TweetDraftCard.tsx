@@ -11,13 +11,15 @@ import {Grid} from "@giphy/react-components";
 import {useDebounce} from "use-debounce";
 import {Icon} from "../icon/Icon";
 import {IconFileNames} from "../../utils/iconUtils";
-import {useDispatch} from "react-redux";
-import {QueueLoading} from "../../tedux/sys/actions";
+import {appConfig} from "../../constants/appConfig";
 
-const giphyFetch = new GiphyFetch("sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh");
+const giphyFetch = new GiphyFetch(appConfig.giphyAPIKey);
 
 type Props = {
-    onClose: () => void
+    onClose: () => void,
+    title: string | ReactNode,
+    onPost: (message: string, imageUrl: string, tags: string[]) => void,
+    postButtonText: string
 };
 export const TweetDraftCard = (props: Props) => {
     const [draft, setDraft] = useState<tweetDraft>(initialDraft);
@@ -75,17 +77,16 @@ export const TweetDraftCard = (props: Props) => {
         }, 250)
     }, [giphyKw])
 
-    const dispatch = useDispatch();
-    const queueSampleLoading = () => dispatch(QueueLoading())
+    const postTweet = () => {
+        props.onPost(draft.message, draft.imageUrl, draft.tags);
+    }
 
     return (
         <DialogCard
-            title={"Draft"}
+            title={props.title}
             closable={true}
             onClose={props.onClose}
-            footerRight={
-                <PurpleButton onClick={queueSampleLoading} label={"POST"}/>
-            }
+            footerRight={<PurpleButton onClick={postTweet} label={props.postButtonText}/>}
         >
             <PurpleTextFieldLight
                 label={"message"}
@@ -145,9 +146,9 @@ const GiphyGrid = (props: {
                 <Grid
                     onGifClick={(gif, e) => {
                         e.preventDefault();
-                        props.setImageUrl(gif.images.downsized_medium.url)
+                        props.setImageUrl(gif.images.fixed_height.url)
                     }}
-                    width={350}
+                    width={375}
                     fetchGifs={fetchGifs(props.searchKeyword)}
                     columns={2}
                 />
