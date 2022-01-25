@@ -17,6 +17,7 @@ import {isDialogModeSelector, loadingStateSelector} from "../tedux/sys/selectors
 import {requestGetHomeLatest, requestGetHomeOlder} from "../apis/homeApi";
 import {feedIdsSelector} from "../tedux/feed/selector";
 import {LoadOlderTweetsButton} from "../components/layout/LoadOlderTweetsButton";
+import {FeedNotificationLoader} from "../components/hoc/FeedNotificationLoader";
 
 const Home: NextPage = () => {
     return (
@@ -83,7 +84,7 @@ const HomeFeed = () => {
 
     return (
         <>
-            <FeedUpdateNotification onClick={triggerGetHomeLatest} numOfUpdates={12}/>
+            <FeedNotificationLoader onClick={triggerGetHomeLatest}/>
             {feedIds.map((id) => (
                 <TweetCard tweetId={id} key={id}/>
             ))}

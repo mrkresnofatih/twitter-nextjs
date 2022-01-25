@@ -11,8 +11,9 @@ import {Grid} from "@giphy/react-components";
 import {useDebounce} from "use-debounce";
 import {Icon} from "../icon/Icon";
 import {IconFileNames} from "../../utils/iconUtils";
+import {appConfig} from "../../constants/appConfig";
 
-const giphyFetch = new GiphyFetch("sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh");
+const giphyFetch = new GiphyFetch(appConfig.giphyAPIKey);
 
 type Props = {
     onClose: () => void,
@@ -145,7 +146,7 @@ const GiphyGrid = (props: {
                 <Grid
                     onGifClick={(gif, e) => {
                         e.preventDefault();
-                        props.setImageUrl(gif.images.downsized_medium.url)
+                        props.setImageUrl(gif.images.fixed_height.url)
                     }}
                     width={375}
                     fetchGifs={fetchGifs(props.searchKeyword)}
