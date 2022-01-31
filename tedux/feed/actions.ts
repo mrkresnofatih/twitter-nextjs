@@ -2,6 +2,7 @@ import {ResponsePayload} from "../../types/responsePayload";
 import {Tweet} from "../../models/Tweet";
 import {Reaction} from "../../models/Reaction";
 import {Dictionary} from "../../types/dictionary";
+import {Player} from "../../models/Player";
 
 export enum FeedActionNames {
     ACCEPT_GET_HOME = "FEED/ACCEPT_GET_HOME",
@@ -9,7 +10,8 @@ export enum FeedActionNames {
     ACCEPT_LIKE_TWEET = "FEED/ACCEPT_LIKE_TWEET",
     ACCEPT_BOOKMARK_TWEET = "FEED/ACCEPT_BOOKMARK_TWEET",
     ACCEPT_RETWEET_TWEET = "FEED/ACCEPT_RETWEET_TWEET",
-    ACCEPT_REPLY_TWEET = "FEED/ACCEPT_REPLY_TWEET"
+    ACCEPT_REPLY_TWEET = "FEED/ACCEPT_REPLY_TWEET",
+    ACCEPT_RECOMMENDED_FOLLOWS = "FEED/ACCEPT_RECOMMENDED_FOLLOWS"
 }
 
 interface AcceptGetHomeResponseActionType {
@@ -41,6 +43,11 @@ interface AcceptRetweetTweetResponseActionType {
 interface AcceptReplyTweetResponseActionType {
     type: FeedActionNames.ACCEPT_REPLY_TWEET,
     payload: Dictionary<Tweet>
+}
+
+interface AcceptGetRecommendedFollowsActionType {
+    type: FeedActionNames.ACCEPT_RECOMMENDED_FOLLOWS,
+    payload: Dictionary<Player>
 }
 
 export const AcceptGetHomeResponse = (payload: ResponsePayload, playerId: number): AcceptGetHomeResponseActionType => {
@@ -86,10 +93,18 @@ export const AcceptReplyTweetResponse = (payload: Dictionary<Tweet>): AcceptRepl
     }
 }
 
+export const AcceptRecommendedFollows = (payload: Dictionary<Player>): AcceptGetRecommendedFollowsActionType => {
+    return {
+        type: FeedActionNames.ACCEPT_RECOMMENDED_FOLLOWS,
+        payload
+    }
+}
+
 export type FeedActionTypes =
     AcceptGetHomeResponseActionType |
     AcceptPostTweetResponseActionType |
     AcceptLikeTweetResponseActionType |
     AcceptBookmarkTweetResponseActionType |
     AcceptRetweetTweetResponseActionType |
-    AcceptReplyTweetResponseActionType;
+    AcceptReplyTweetResponseActionType |
+    AcceptGetRecommendedFollowsActionType;

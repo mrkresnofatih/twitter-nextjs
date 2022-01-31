@@ -129,6 +129,15 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
             console.log(action.type, newState)
             return newState;
         }
+        case FeedActionNames.ACCEPT_RECOMMENDED_FOLLOWS: {
+            const players = action.payload
+            const newState: feedStateType = {
+                ...state,
+                players: { ...state.players, ...players }
+            }
+            console.log(action.type, newState)
+            return newState;
+        }
         default:
             return state;
     }

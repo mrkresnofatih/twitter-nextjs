@@ -22,3 +22,11 @@ export const tweetPlayerUserNameSelector = (tweetId: number) => (state: AllState
     const targetTweet = state.feed.tweets[tweetId]
     return state.feed.players[targetTweet.playerId].userName
 }
+
+export const recommendedPlayersToFollowSelector = () => (state: AllState): Player[] => {
+    const selfPlayerId = state.auth.playerId
+    const allPlayers = state.feed.players
+    const allFollows = state.feed.follows
+    const recommendedFollowIds = Object.keys(allPlayers).filter((playerId) => (allFollows[playerId] === undefined && Number(playerId) !== selfPlayerId));
+    return recommendedFollowIds.map((playerId) => allPlayers[playerId])
+}
