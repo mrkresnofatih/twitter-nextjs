@@ -7,5 +7,7 @@ export enum API_ROUTES {
     LIKE_TWEET = "/tweet/like",
     BOOKMARK_TWEET = "/tweet/bookmark",
     RETWEET_TWEET = "/tweet/retweet",
-    REPLY_TWEET = "/tweet/reply"
+    REPLY_TWEET = "/tweet/reply",
+
+    START_FOLLOW = "/follow/start"
 }

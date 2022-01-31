@@ -5,7 +5,8 @@ import styles from '../../styles/card/followcard.module.css';
 type Props = {
     src: string,
     userName: string,
-    fullName: string
+    fullName: string,
+    onFollowClick: () => void
 };
 export const FollowCard = (props: Props) => {
     return (
@@ -21,7 +22,10 @@ export const FollowCard = (props: Props) => {
                     <h6 className={styles.followCardFullName}>{props.fullName}</h6>
                 </div>
                 <div className={`${styles.followButton} ${styles.followButtonHoverHide}`}>+</div>
-                <div className={`${styles.followButton} ${styles.followButtonHoverShow}`}>Follow</div>
+                <div
+                    className={`${styles.followButton} ${styles.followButtonHoverShow}`}
+                    onClick={props.onFollowClick}
+                >Follow</div>
             </div>
         </div>
     );

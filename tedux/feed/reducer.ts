@@ -138,6 +138,18 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
             console.log(action.type, newState)
             return newState;
         }
+        case FeedActionNames.ACCEPT_START_FOLLOW: {
+            const follow = action.payload
+            const newState: feedStateType = {
+                ...state,
+                follows: {
+                    ...state.follows,
+                    [follow.playerId]: follow
+                }
+            }
+            console.log(action.type, newState)
+            return newState
+        }
         default:
             return state;
     }

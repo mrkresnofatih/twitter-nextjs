@@ -4,11 +4,12 @@ import styles from '../../styles/list/followlist.module.css';
 import {FollowCard} from "../card/FollowCard";
 import {useSelector} from "react-redux";
 import {recommendedPlayersToFollowSelector} from "../../tedux/feed/selector";
+import {requestStartFollow} from "../../apis/followApi";
 
 type Props = {};
 export const FollowList = (props: Props) => {
     const players = useSelector(recommendedPlayersToFollowSelector())
-    console.log(players)
+    const requestStartFollowing = (playerId: number) => () => requestStartFollow(playerId)
     return (
         <div className={styles.followListOuter}>
             <div className={styles.followListInner}>
@@ -21,6 +22,7 @@ export const FollowList = (props: Props) => {
                             src={imageUrl}
                             userName={userName}
                             fullName={fullName}
+                            onFollowClick={requestStartFollowing(id)}
                         />
                     )
                 })}
