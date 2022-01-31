@@ -3,8 +3,6 @@ import {BaseLayout} from "../components/layout/BaseLayout";
 import {HomeHeader} from "../components/header/HomeHeader";
 import {NavMenu} from "../components/nav/NavMenu";
 import {TweetCard} from "../components/card/TweetCard";
-import {FollowList} from "../components/list/FollowList";
-import {FeedUpdateNotification} from "../components/layout/FeedUpdateNotification";
 import {TweetHoverButton} from "../components/button/TweetHoverButton";
 import {pageHeaders} from "../constants/pageHeaders";
 import {StoreWrapper} from "../tedux/StoreWrapper";
@@ -18,6 +16,7 @@ import {requestGetHomeLatest, requestGetHomeOlder} from "../apis/homeApi";
 import {feedIdsSelector} from "../tedux/feed/selector";
 import {LoadOlderTweetsButton} from "../components/layout/LoadOlderTweetsButton";
 import {FeedNotificationLoader} from "../components/hoc/FeedNotificationLoader";
+import {RecommendedFollowsLoader} from "../components/hoc/RecommendedFollowsLoader";
 
 const Home: NextPage = () => {
     return (
@@ -42,7 +41,7 @@ const HomeComp = () => {
                 <HomeFeed/>
             }
             hoverBottomLeft={<TweetHoverButton/>}
-            right={<FollowList/>}
+            right={<RecommendedFollowsLoader/>}
             isLoading={loadingState}
             isAuthenticated={isAuthed}
             isDialogMode={dialogState}

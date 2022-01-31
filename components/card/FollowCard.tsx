@@ -3,7 +3,10 @@ import * as React from 'react';
 import styles from '../../styles/card/followcard.module.css';
 
 type Props = {
-
+    src: string,
+    userName: string,
+    fullName: string,
+    onFollowClick: () => void
 };
 export const FollowCard = (props: Props) => {
     return (
@@ -11,15 +14,18 @@ export const FollowCard = (props: Props) => {
             <div className={styles.followCardInner}>
                 <img
                     className={styles.followCardAvatar}
-                    src={"https://i.pinimg.com/236x/25/15/5d/25155d81c8fe86c204b0243e2407e3a3.jpg"}
+                    src={props.src}
                     alt={"followCardAvatar"}
                 />
                 <div className={styles.followCardContent}>
-                    <h5 className={styles.followCardUserName}>dragonSlayer</h5>
-                    <h6 className={styles.followCardFullName}>kresno fatih imani</h6>
+                    <h5 className={styles.followCardUserName}>{props.userName}</h5>
+                    <h6 className={styles.followCardFullName}>{props.fullName}</h6>
                 </div>
                 <div className={`${styles.followButton} ${styles.followButtonHoverHide}`}>+</div>
-                <div className={`${styles.followButton} ${styles.followButtonHoverShow}`}>Follow</div>
+                <div
+                    className={`${styles.followButton} ${styles.followButtonHoverShow}`}
+                    onClick={props.onFollowClick}
+                >Follow</div>
             </div>
         </div>
     );
