@@ -1,5 +1,5 @@
 import {Dictionary} from "./dictionary";
-import {Tweet} from "../models/Tweet";
+import {SuperTweet, Tweet} from "../models/Tweet";
 import {Player} from "../models/Player";
 import {Follow} from "../models/Follow";
 import {Reaction} from "../models/Reaction";
@@ -9,5 +9,6 @@ export interface ResponsePayload {
     tweets: Dictionary<Tweet>,
     players: Dictionary<Player>,
     follows: Dictionary<Follow>,
-    reactions: Dictionary<Reaction>
+    reactions: Dictionary<Reaction>,
+    superTweets: Dictionary<SuperTweet>
 }

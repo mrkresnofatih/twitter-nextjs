@@ -6,19 +6,19 @@ export const handleNumberAbbreviation = (rawNumber: number): string => {
                 return `${value}`
             }
             case 1: {
-                return `${fixedValue} K`
+                return `${fixedValue}K`
             }
             case 2: {
-                return `${fixedValue} M`
+                return `${fixedValue}M`
             }
             case 3: {
-                return `${fixedValue} B`
+                return `${fixedValue}B`
             }
             case 4: {
-                return `${fixedValue} T`
+                return `${fixedValue}T`
             }
             default: {
-                return `${fixedValue} P`
+                return `${fixedValue}P`
             }
         }
     }

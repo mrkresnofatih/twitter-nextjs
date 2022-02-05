@@ -13,7 +13,8 @@ export enum FeedActionNames {
     ACCEPT_RETWEET_TWEET = "FEED/ACCEPT_RETWEET_TWEET",
     ACCEPT_REPLY_TWEET = "FEED/ACCEPT_REPLY_TWEET",
     ACCEPT_RECOMMENDED_FOLLOWS = "FEED/ACCEPT_RECOMMENDED_FOLLOWS",
-    ACCEPT_START_FOLLOW = "FEED/ACCEPT_START_FOLLOW"
+    ACCEPT_START_FOLLOW = "FEED/ACCEPT_START_FOLLOW",
+    // ACCEPT_SUPER_TWEET = "FEED/ACCEPT_SUPERTWEET"
 }
 
 interface AcceptGetHomeResponseActionType {
@@ -56,6 +57,11 @@ interface AcceptStartFollowResponseActionType {
     type: FeedActionNames.ACCEPT_START_FOLLOW,
     payload: Follow
 }
+
+// interface AcceptSuperTweetResponseActionType {
+//     type: FeedActionNames.ACCEPT_SUPER_TWEET,
+//     payload: ResponsePayload
+// }
 
 export const AcceptGetHomeResponse = (payload: ResponsePayload, playerId: number): AcceptGetHomeResponseActionType => {
     return {
@@ -114,7 +120,15 @@ export const AcceptStartFollowResponse = (payload: Follow): AcceptStartFollowRes
     }
 }
 
+// export const AcceptSuperTweetResponse = (payload: ResponsePayload): AcceptSuperTweetResponseActionType => {
+//     return {
+//         type: FeedActionNames.ACCEPT_SUPER_TWEET,
+//         payload
+//     }
+// }
+
 export type FeedActionTypes =
+    // AcceptSuperTweetResponseActionType |
     AcceptGetHomeResponseActionType |
     AcceptPostTweetResponseActionType |
     AcceptLikeTweetResponseActionType |

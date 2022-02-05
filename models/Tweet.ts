@@ -12,6 +12,12 @@ export type Tweet = {
     tags: string[]
 }
 
+export type SuperTweet = Tweet & {
+    numOfReplies: number,
+    numOfRetweets: number,
+    numOfLikes: number
+}
+
 export const getSampleTweet = (tweetId: number): Tweet => {
     return {
         id: 4,
