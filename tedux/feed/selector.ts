@@ -1,5 +1,5 @@
 import {AllState} from "../rootReducer";
-import {Tweet} from "../../models/Tweet";
+import {SuperTweet, Tweet} from "../../models/Tweet";
 import {Player} from "../../models/Player";
 
 export const feedSelector = (state: AllState) => state.feed;
@@ -7,6 +7,8 @@ export const feedSelector = (state: AllState) => state.feed;
 export const feedIdsSelector = (state: AllState) => Object.keys(state.feed.feedIds).map((id) => Number(id)).sort((a, b) => (b - a));
 
 export const specificFeedTweetSelector = (id: number) => (state: AllState): Tweet => state.feed.tweets[id]
+
+export const specificSuperTweetSelector = (id: number) => (state: AllState): SuperTweet => state.feed.superTweets[id]
 
 export const specificFeedPlayerSelector = (id: number) => (state: AllState): Player => state.feed.players[id]
 
@@ -29,4 +31,11 @@ export const recommendedPlayersToFollowSelector = () => (state: AllState): Playe
     const allFollows = state.feed.follows
     const recommendedFollowIds = Object.keys(allPlayers).filter((playerId) => (allFollows[playerId] === undefined && Number(playerId) !== selfPlayerId));
     return recommendedFollowIds.map((playerId) => allPlayers[playerId])
+}
+
+export const superTweetPageFeedIdsSelector = (state: AllState): number[] => {
+    return Object.keys(state.feed.tweets).filter((tweetId) => {
+        const tweet = specificFeedTweetSelector(Number(tweetId))(state)
+        return (tweet.replyOf !== 0);
+    }).map((tweetId) => Number(tweetId))
 }

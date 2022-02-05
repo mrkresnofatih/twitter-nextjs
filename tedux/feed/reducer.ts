@@ -1,5 +1,5 @@
 import {Dictionary} from "../../types/dictionary";
-import {Tweet} from "../../models/Tweet";
+import {SuperTweet, Tweet} from "../../models/Tweet";
 import {Player} from "../../models/Player";
 import {Follow} from "../../models/Follow";
 import {Reaction} from "../../models/Reaction";
@@ -11,6 +11,7 @@ interface feedStateType {
 
     oldestTweetDate: number,
     tweets: Dictionary<Tweet>,
+    superTweets: Dictionary<SuperTweet>,
     myRetweetIds: Dictionary<boolean>,
     myReplyIds: Dictionary<boolean>,
 
@@ -25,6 +26,7 @@ interface feedStateType {
 const feedInitialState: feedStateType = {
     feedIds: { },
     oldestTweetDate: 0,
+    superTweets: { },
     tweets: { },
     myRetweetIds: { },
     myReplyIds: { },
@@ -54,6 +56,7 @@ const feedReducer = (state = feedInitialState, action: FeedActionTypes ) => {
                 ...state,
                 feedIds: { ...state.feedIds, ...newData.feedIds },
                 tweets: { ...state.tweets, ...newData.tweets },
+                superTweets: { ...state.superTweets, ...newData.superTweets },
 
                 myRetweetIds: { ...state.myRetweetIds, ...(Object.values(newData.tweets)
                     .filter((tweet) => (tweet.playerId === myPlayerId && tweet.retweetOf !== 0))

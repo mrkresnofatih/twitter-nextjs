@@ -4,13 +4,19 @@ import {DropLoading, QueueLoading, SetDialogMode} from "../tedux/sys/actions";
 import {getRequestIgniter, postRequestIgniter} from "./requestIgniter";
 import {store} from "../tedux/store";
 import {
-    AcceptBookmarkTweetResponse,
+    AcceptBookmarkTweetResponse, AcceptGetHomeResponse,
     AcceptLikeTweetResponse,
     AcceptPostTweetResponse,
     AcceptReplyTweetResponse,
     AcceptRetweetTweetResponse
 } from "../tedux/feed/actions";
 import {DialogModes} from "../constants/dialogModes";
+
+interface getSuperTweetPayload {
+    route: API_ROUTES.GET_SUPER_TWEET,
+    endPoint: string,
+    config: { headers: { TK: string } }
+}
 
 interface postTweetPayload {
     route: API_ROUTES.POST_TWEET,
@@ -44,6 +50,7 @@ interface replyTweetPayload {
 }
 
 type tweetAPIPayloadTypes =
+    getSuperTweetPayload |
     postTweetPayload |
     likeTweetPayload |
     bookmarkTweetPayload |
@@ -119,6 +126,19 @@ const tweetAPIHandler = (payload: tweetAPIPayloadTypes) => {
             )
             break;
         }
+        case API_ROUTES.GET_SUPER_TWEET: {
+            const playerId = store.getState().auth.playerId;
+            getRequestIgniter(
+                payload.endPoint,
+                payload.config,
+                () => [DropLoading()],
+                (result) => [
+                    DropLoading(),
+                    AcceptGetHomeResponse(result, playerId)
+                ]
+            )
+            break;
+        }
         default:
             break;
     }
@@ -181,6 +201,17 @@ export const requestRetweetTweet = (
         route: API_ROUTES.RETWEET_TWEET,
         config: { headers: { TK: store.getState().auth.token } },
         endPoint: `${API_ROUTES.RETWEET_TWEET}/${tweetId}`
+    }
+    return tweetAPIHandler(payload)
+}
+
+export const requestSuperTweet = (
+    tweetId: number
+) => {
+    const payload: getSuperTweetPayload = {
+        route: API_ROUTES.GET_SUPER_TWEET,
+        endPoint: `${API_ROUTES.GET_SUPER_TWEET}/${tweetId}`,
+        config: { headers: { TK: store.getState().auth.token } }
     }
     return tweetAPIHandler(payload)
 }

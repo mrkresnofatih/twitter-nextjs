@@ -9,15 +9,17 @@ import {Player} from "../../models/Player";
 import {useDispatch, useSelector} from "react-redux";
 import {
     bookmarkExistsSelector,
-    likeExistsSelector, myReplyExistsSelector,
+    likeExistsSelector,
+    myReplyExistsSelector,
     myRetweetExistsSelector,
     specificFeedPlayerSelector,
     specificFeedTweetSelector
 } from "../../tedux/feed/selector";
 import {Image} from "../image/Image";
 import {requestBookmarkTweet, requestLikeTweet, requestRetweetTweet} from "../../apis/tweetApi";
-import {batchDispatch} from "../../tedux/batchDispatch";
 import {SetReplyDialogId} from "../../tedux/sys/actions";
+import {Link} from "@mui/material";
+import {pageRoutes} from "../../constants/pageRoutes";
 
 type Props = {
     tweetId: number
@@ -33,11 +35,13 @@ export const TweetCard = (props: Props) => {
     return (
         <div className={styles.tweetCardContainer}>
             {isReply && <PreTweet replyOf={tweetData.replyOf}/>}
-            <div className={styles.tweetCard}>
-                <TweetCardMain tweetId={actualTweetId}/>
-                {isReply && <div className={styles.tweetHistoryLineDown}/>}
-                {isRetweet && <RetweetHighlight userName={playerData.userName}/>}
-            </div>
+            <Link style={{textDecoration: "none"}} href={`${pageRoutes.TWEET}/${props.tweetId}`}>
+                <div className={styles.tweetCard}>
+                    <TweetCardMain tweetId={actualTweetId}/>
+                    {isReply && <div className={styles.tweetHistoryLineDown}/>}
+                    {isRetweet && <RetweetHighlight userName={playerData.userName}/>}
+                </div>
+            </Link>
 
         </div>
     );
@@ -124,7 +128,7 @@ const TweetContentHeader = (props: tweetContentHeaderProp) => {
     )
 }
 
-const TweetReactionDrawer = (props: { tweetId: number }) => {
+export const TweetReactionDrawer = (props: { tweetId: number }) => {
     const isLiked = useSelector(likeExistsSelector(props.tweetId))
     const isBookmarked = useSelector(bookmarkExistsSelector(props.tweetId))
     const isRetweeted = useSelector(myRetweetExistsSelector(props.tweetId))
@@ -140,25 +144,29 @@ const TweetReactionDrawer = (props: { tweetId: number }) => {
             iconFileName: IconFileNames.REPLY_OUTLINE_WHITE,
             hoverIconFileName: IconFileNames.REPLY_OUTLINE_PURPLE,
             isActive: isReplied,
-            onClick: isReplied ? ()=>{} : openReplyDialog,
+            onClick: isReplied ? () => {
+            } : openReplyDialog,
         },
         {
             iconFileName: IconFileNames.RETWEET_OUTLINE_WHITE,
             hoverIconFileName: IconFileNames.RETWEET_OUTLINE_PURPLE,
             isActive: isRetweeted,
-            onClick: isRetweeted ? () => {} : () => requestRetweetTweet(props.tweetId)
+            onClick: isRetweeted ? () => {
+            } : () => requestRetweetTweet(props.tweetId)
         },
         {
             iconFileName: IconFileNames.LOVE_OUTLINE_WHITE,
             hoverIconFileName: IconFileNames.LOVE_OUTLINE_PURPLE,
             isActive: isLiked,
-            onClick: isLiked ? () => {} : () => requestLikeTweet(props.tweetId)
+            onClick: isLiked ? () => {
+            } : () => requestLikeTweet(props.tweetId)
         },
         {
             iconFileName: IconFileNames.BOOKMARK_OUTLINE_WHITE,
             hoverIconFileName: IconFileNames.BOOKMARK_OUTLINE_PURPLE,
             isActive: isBookmarked,
-            onClick: isBookmarked ? ()=>{} : () => requestBookmarkTweet(props.tweetId)
+            onClick: isBookmarked ? () => {
+            } : () => requestBookmarkTweet(props.tweetId)
         }
     ]
 
@@ -212,26 +220,28 @@ const PreTweet = (props: {
     }
 
     return (
-        <div className={styles.tweetCard}>
-            <TweetAvatar avatarUrl={playerData.imageUrl}/>
-            <div className={styles.tweetCardContent}>
-                <TweetContentHeader
-                    timestamp={timeStamp}
-                    userName={playerData.userName}
-                />
-                <TweetContentBody
-                    message={replyTweetData.message}
-                    imageUrl={replyTweetData.imageUrl}
-                />
-                <TagCollection tagNames={replyTweetData.tags}/>
-                <TweetReactionDrawer tweetId={props.replyOf}/>
+        <Link style={{textDecoration: "none"}} href={`${pageRoutes.TWEET}/${props.replyOf}`}>
+            <div className={styles.tweetCard}>
+                <TweetAvatar avatarUrl={playerData.imageUrl}/>
+                <div className={styles.tweetCardContent}>
+                    <TweetContentHeader
+                        timestamp={timeStamp}
+                        userName={playerData.userName}
+                    />
+                    <TweetContentBody
+                        message={replyTweetData.message}
+                        imageUrl={replyTweetData.imageUrl}
+                    />
+                    <TagCollection tagNames={replyTweetData.tags}/>
+                    <TweetReactionDrawer tweetId={props.replyOf}/>
+                </div>
+                <div className={styles.tweetHistoryLineUp}/>
+                <div className={`${styles.tweetHighlight} ${styles.replyHighlight}`}>
+                    <Icon iconFileName={IconFileNames.REPLY_OUTLINE_WHITE} className={styles.retweetedByIcon}/>
+                    {`to @${playerData.userName}`}
+                </div>
             </div>
-            <div className={styles.tweetHistoryLineUp}/>
-            <div className={`${styles.tweetHighlight} ${styles.replyHighlight}`}>
-                <Icon iconFileName={IconFileNames.REPLY_OUTLINE_WHITE} className={styles.retweetedByIcon}/>
-                {`to @${playerData.userName}`}
-            </div>
-        </div>
+        </Link>
     )
 }
 
@@ -243,7 +253,7 @@ const TagCard = (props: {
     )
 }
 
-const TagCollection = (props: {
+export const TagCollection = (props: {
     tagNames: string[]
 }) => {
     return (
